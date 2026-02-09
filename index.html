@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemaForge — Study Design Architect | Coefficients</title>
+<meta name="description" content="AI-powered study design consultation. Get methodologically defensible research protocols in minutes.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e2d3d;
+  --text:#e2e8f0;--dim:#64748b;--accent:#06b6d4;--accent2:#0e7490;
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+
+/* Hero */
+.hero{text-align:center;padding:4rem 1.5rem 3rem;max-width:720px;margin:0 auto}
+.hero .logo{font-size:2.5rem;margin-bottom:.5rem}
+.hero h1{font-size:2.2rem;font-weight:800;margin-bottom:.75rem;background:linear-gradient(135deg,var(--accent),#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.1rem;color:var(--dim);max-width:500px;margin:0 auto 2rem}
+.hero .badge{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:2rem;padding:.4rem 1rem;font-size:.8rem;color:var(--accent);margin-bottom:1.5rem}
+
+/* Chat Interface */
+.chat-container{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem}
+.chat-box{background:var(--surface);border:1px solid var(--border);border-radius:1rem;overflow:hidden;min-height:400px;display:flex;flex-direction:column}
+.chat-messages{flex:1;padding:1.5rem;overflow-y:auto;max-height:60vh}
+.msg{margin-bottom:1rem;display:flex;gap:.75rem;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse}
+.msg .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.msg.assistant .avatar{background:var(--accent2);color:#fff}
+.msg.user .avatar{background:#4f46e5;color:#fff}
+.msg .bubble{max-width:85%;padding:.75rem 1rem;border-radius:.75rem;font-size:.9rem;line-height:1.5}
+.msg.assistant .bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:.25rem}
+.msg.user .bubble{background:#4f46e5;color:#fff;border-top-right-radius:.25rem}
+.msg .bubble p{margin-bottom:.5rem}
+.msg .bubble p:last-child{margin-bottom:0}
+.msg .bubble ul,.msg .bubble ol{padding-left:1.2rem;margin-bottom:.5rem}
+.msg .bubble li{margin-bottom:.25rem}
+.msg .bubble strong{color:var(--accent)}
+.msg .bubble code{background:rgba(6,182,212,.1);padding:.1rem .4rem;border-radius:.25rem;font-size:.85em}
+
+/* Options */
+.options{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.option-btn{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem 1rem;border-radius:.5rem;cursor:pointer;font-size:.85rem;transition:all .2s}
+.option-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(6,182,212,.05)}
+
+/* Input */
+.chat-input{display:flex;gap:.5rem;padding:1rem;border-top:1px solid var(--border);background:var(--surface2)}
+.chat-input textarea{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;border-radius:.5rem;font-family:var(--font);font-size:.9rem;resize:none;min-height:44px;max-height:120px}
+.chat-input textarea::placeholder{color:var(--dim)}
+.chat-input textarea:focus{outline:none;border-color:var(--accent)}
+.chat-input button{background:var(--accent);color:#000;border:none;padding:.75rem 1.25rem;border-radius:.5rem;cursor:pointer;font-weight:600;font-size:.9rem;white-space:nowrap}
+.chat-input button:hover{opacity:.9}
+.chat-input button:disabled{opacity:.4;cursor:not-allowed}
+
+/* Typing indicator */
+.typing{display:flex;align-items:center;gap:.3rem;padding:.5rem 0}
+.typing span{width:6px;height:6px;background:var(--dim);border-radius:50%;animation:typingBounce 1.4s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+
+/* Footer */
+.footer{text-align:center;padding:2rem;color:var(--dim);font-size:.8rem}
+.footer a{color:var(--accent)}
+
+/* Report */
+.report{background:var(--bg);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem;margin-top:.75rem}
+.report h3{color:var(--accent);font-size:.95rem;margin-bottom:.5rem}
+.report-section{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.report-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+
+/* Responsive */
+@media(max-width:640px){
+  .hero h1{font-size:1.6rem}
+  .hero{padding:2.5rem 1rem 2rem}
+  .chat-container{padding:0 .75rem 2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🧬 Coefficients Health Analytics</div>
+  <div class="logo">🏗️</div>
+  <h1>SchemaForge</h1>
+  <p>AI-powered study design consultation. Describe your research question — get a methodologically defensible protocol.</p>
+</div>
+
+<div class="chat-container">
+  <div class="chat-box">
+    <div class="chat-messages" id="messages">
+      <div class="msg assistant">
+        <div class="avatar">🏗️</div>
+        <div class="bubble">
+          <p>Welcome to <strong>SchemaForge</strong>. I'm your study design consultant.</p>
+          <p>Tell me your research question, and I'll help you design a rigorous study. I'll challenge your assumptions, identify threats to validity, and recommend the right methodology.</p>
+          <p>What would you like to investigate?</p>
+          <div class="options">
+            <button class="option-btn" onclick="sendOption(this)">Compare two treatments (RCT)</button>
+            <button class="option-btn" onclick="sendOption(this)">Estimate causal effect from observational data</button>
+            <button class="option-btn" onclick="sendOption(this)">Evaluate a screening/diagnostic test</button>
+            <button class="option-btn" onclick="sendOption(this)">I have a specific question…</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <textarea id="input" placeholder="Describe your research question…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+      <button onclick="send()" id="sendBtn">Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Built by <a href="https://coef.health">Coefficients Health Analytics</a> — Research rigor, automated.</p>
+  <p style="margin-top:.5rem">Powered by clinical research methodology from physicians and epidemiologists.</p>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `You are SchemaForge, an expert study design consultant built by Coefficients Health Analytics. You were designed by a physician-scientist with a PhD in clinical research (Mount Sinai), MPH in epidemiologic methods (Johns Hopkins), and 20+ years of data analysis.
+
+Your job: Walk researchers through study design decisions with rigorous, Socratic methodology.
+
+PRINCIPLES:
+- Study design comes BEFORE statistics. Always.
+- Challenge weak assumptions. Don't just accept the researcher's framing.
+- Identify threats to validity (internal, external, construct, statistical conclusion)
+- Be specific about bias directions (toward/away from null)
+- Recommend the MINIMUM viable design that answers the question
+- Consider feasibility (time, cost, ethics, data availability)
+
+CONSULTATION FLOW:
+1. Understand the research question (PICO/PECO format)
+2. Classify: descriptive vs analytic, observational vs experimental
+3. Identify the target trial (even for observational studies)
+4. Challenge assumptions: Is the exposure well-defined? Is there confounding? Selection bias?
+5. Recommend design with justification
+6. Identify key threats and mitigation strategies
+7. Suggest analysis approach
+
+RESPONSE STYLE:
+- Direct, no fluff
+- Use clinical/epi terminology but explain when needed
+- Give concrete examples from real research
+- Flag common mistakes researchers make with this design
+- Be opinionated — recommend ONE best approach, not a menu
+
+When you have enough information, generate a STRUCTURED REPORT with:
+- Recommended design + classification
+- PICO/PECO breakdown
+- Key assumptions
+- Threats to validity + mitigation
+- Sample size considerations
+- Suggested analysis approach
+- Common pitfalls to avoid
+
+Keep responses concise. Ask ONE question at a time. Don't overwhelm.`;
+
+const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+const messagesDiv = document.getElementById('messages');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+
+function addMessage(role, content) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const avatar = role === 'assistant' ? '🏗️' : '👤';
+  
+  // Simple markdown-ish rendering
+  let html = content
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n- /g, '</p><ul><li>')
+    .replace(/\n(\d+)\. /g, '</p><ol><li>');
+  
+  // Wrap in paragraphs
+  if (!html.startsWith('<')) html = '<p>' + html + '</p>';
+  
+  div.innerHTML = `<div class="avatar">${avatar}</div><div class="bubble">${html}</div>`;
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function addTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = 'typing';
+  div.innerHTML = '<div class="avatar">🏗️</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+function sendOption(btn) {
+  input.value = btn.textContent;
+  send();
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text) return;
+  
+  input.value = '';
+  sendBtn.disabled = true;
+  
+  addMessage('user', text);
+  messages.push({ role: 'user', content: text });
+  addTyping();
+  
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: messages.slice(0, 20) }) // Limit context
+    });
+    
+    const data = await resp.json();
+    removeTyping();
+    
+    if (data.error) {
+      addMessage('assistant', 'Sorry, something went wrong. Please try again.');
+    } else {
+      const reply = data.reply || data.choices?.[0]?.message?.content || 'No response';
+      messages.push({ role: 'assistant', content: reply });
+      addMessage('assistant', reply);
+    }
+  } catch (e) {
+    removeTyping();
+    addMessage('assistant', 'Connection error. Please try again.');
+  }
+  
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+// Auto-resize textarea
+input.addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+</script>
+</body>
+</html>

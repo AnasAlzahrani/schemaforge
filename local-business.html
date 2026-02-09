@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Business Schema Generator — Free JSON-LD Markup | SchemaForge</title>
+  <meta name="description" content="Generate Local Business schema markup (JSON-LD) for free. Add business name, address, hours, phone, geo coordinates. Get rich results in Google.">
+  <link rel="canonical" href="https://schemaforge.vercel.app/local-business.html">
+  <meta property="og:title" content="Local Business Schema Generator — Free JSON-LD | SchemaForge">
+  <meta property="og:description" content="Generate Local Business schema markup for free. Include address, opening hours, and contact details.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemaforge.vercel.app/local-business.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Local Business Schema Generator",
+    "description": "Free Local Business schema markup generator. Create valid JSON-LD structured data.",
+    "url": "https://schemaforge.vercel.app/local-business.html",
+    "isPartOf": { "@type": "WebApplication", "name": "SchemaForge" }
+  }
+  </script>
+  
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body data-generator="local-business">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="navbar-brand">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#14b8a6" fill-opacity="0.15"/><path d="M8 8h4v4H8zM16 8h4v4h-4zM8 16h4v4H8zM16 16h4v4h-4z" fill="#14b8a6"/><path d="M12 10h4M10 12v4M18 12v4M12 18h4" stroke="#14b8a6" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Schema<span class="accent">Forge</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/local-business.html" class="active">Local Business</a></li>
+        <li><a href="/article.html">Article</a></li>
+        <li><a href="/product.html">Product</a></li>
+        <li><a href="/event.html">Event</a></li>
+        <li><a href="/howto.html">How-To</a></li>
+        <li><a href="/organization.html">Organization</a></li>
+        <li><a href="/recipe.html">Recipe</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="generator-page container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span class="sep">/</span> <span>Local Business Schema Generator</span>
+    </div>
+
+    <div class="generator-header">
+      <h1>Local Business Schema <span class="text-accent">Generator</span></h1>
+      <p>Generate LocalBusiness structured data (JSON-LD) with address, opening hours, and contact information for Google rich results.</p>
+    </div>
+
+    <div class="generator-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <h2><span class="dot"></span> Business Information</h2>
+        </div>
+        <div class="panel-body">
+          <form id="generatorForm" onsubmit="return false;">
+            <!-- Basic Info -->
+            <div class="form-group">
+              <label>Business Name <span class="required">*</span></label>
+              <input type="text" id="bizName" placeholder="e.g. Joe's Coffee Shop">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Image URL</label>
+                <input type="url" id="bizImage" placeholder="https://example.com/photo.jpg">
+              </div>
+              <div class="form-group">
+                <label>@id (Unique Identifier)</label>
+                <input type="text" id="bizId" placeholder="https://example.com/#business">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Website URL</label>
+                <input type="url" id="bizUrl" placeholder="https://example.com">
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="bizPhone" placeholder="+1-555-123-4567">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Price Range</label>
+              <input type="text" id="bizPriceRange" placeholder="e.g. $$ or $10-$50">
+              <span class="form-hint">Use $ signs ($ to $$$$) or a numeric range</span>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Address -->
+            <h3 class="mb-2">📍 Address</h3>
+            <div class="form-group">
+              <label>Street Address</label>
+              <input type="text" id="bizStreet" placeholder="e.g. 123 Main Street">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="bizCity" placeholder="e.g. San Francisco">
+              </div>
+              <div class="form-group">
+                <label>State / Region</label>
+                <input type="text" id="bizState" placeholder="e.g. CA">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Postal Code</label>
+                <input type="text" id="bizZip" placeholder="e.g. 94105">
+              </div>
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" id="bizCountry" placeholder="e.g. US">
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Geo -->
+            <h3 class="mb-2">🌐 Geo Coordinates</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Latitude</label>
+                <input type="number" id="bizLat" step="any" placeholder="e.g. 37.7749">
+              </div>
+              <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" id="bizLng" step="any" placeholder="e.g. -122.4194">
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Opening Hours -->
+            <h3 class="mb-2">🕐 Opening Hours</h3>
+            <div class="dynamic-items" id="hoursItems">
+              <div class="dynamic-item hours-item">
+                <div class="dynamic-item-header">
+                  <span class="dynamic-item-number">Opening Hours</span>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeDynamicItem(this)">✕ Remove</button>
+                </div>
+                <div class="form-row-3">
+                  <div class="form-group">
+                    <label>Day</label>
+                    <select class="hours-day">
+                      <option value="">Select day</option>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Sunday">Sunday</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Opens</label>
+                    <input type="time" class="hours-open">
+                  </div>
+                  <div class="form-group">
+                    <label>Closes</label>
+                    <input type="time" class="hours-close">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="add-item-btn mt-2" onclick="addHoursItem()">
+              + Add Opening Hours
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Preview -->
+      <div class="sticky-panel">
+        <div class="panel">
+          <div class="panel-header">
+            <h2><span class="dot"></span> Generated JSON-LD</h2>
+          </div>
+          <div class="panel-body">
+            <div class="code-actions">
+              <button id="copyBtn" class="btn btn-copy btn-sm" onclick="copySchema()">📋 Copy to Clipboard</button>
+            </div>
+            <div class="code-preview">
+              <pre id="schemaOutput"></pre>
+            </div>
+          </div>
+        </div>
+        <div class="panel mt-2">
+          <div class="panel-header">
+            <h2><span class="dot"></span> Rich Result Preview</h2>
+          </div>
+          <div class="panel-body">
+            <p class="form-hint mb-1">How it may appear in Google search results:</p>
+            <div id="richPreview"></div>
+          </div>
+        </div>
+        <div class="ad-slot ad-slot-sidebar mt-2"><!-- Ad Placement: Sidebar --></div>
+      </div>
+    </div>
+
+    <div class="test-banner mt-4">
+      <div class="test-banner-text">
+        <h3>Test Your Local Business Schema</h3>
+        <p>Validate your markup with Google's Rich Results Test to ensure it's eligible for local business rich results.</p>
+      </div>
+      <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Test with Google →</a>
+    </div>
+
+    <div class="ad-slot"><!-- Ad Placement: Below the fold --></div>
+
+    <section class="guide-section">
+      <h2>How to Use Local Business Schema</h2>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="guide-step-number">1</div>
+          <h3>Enter Business Details</h3>
+          <p>Fill in your business name, address, phone number, and opening hours. The more complete, the better.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">2</div>
+          <h3>Add Geo Coordinates</h3>
+          <p>Include latitude and longitude for precise location mapping. Find these on Google Maps.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">3</div>
+          <h3>Copy & Implement</h3>
+          <p>Copy the JSON-LD and add it to your website's homepage or contact page.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">4</div>
+          <h3>Claim Google Business</h3>
+          <p>Pair your schema markup with a Google Business Profile for maximum local SEO impact.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="schema-type-nav container">
+    <h2>Other Schema Generators</h2>
+    <div class="schema-type-pills">
+      <a href="/faq.html" class="schema-type-pill">❓ FAQ</a>
+      <a href="/local-business.html" class="schema-type-pill current">🏪 Local Business</a>
+      <a href="/article.html" class="schema-type-pill">📰 Article</a>
+      <a href="/product.html" class="schema-type-pill">🛍️ Product</a>
+      <a href="/event.html" class="schema-type-pill">🎪 Event</a>
+      <a href="/howto.html" class="schema-type-pill">🔧 How-To</a>
+      <a href="/organization.html" class="schema-type-pill">🏢 Organization</a>
+      <a href="/recipe.html" class="schema-type-pill">🍳 Recipe</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          Built by <a href="https://coef.health" target="_blank" rel="noopener">Coefficients Health Analytics</a> · © 2026 SchemaForge
+        </div>
+        <a href="https://buymeacoffee.com/ano0osd" target="_blank" rel="noopener" class="bmc-footer-btn">☕ Buy Me a Coffee</a>
+        <ul class="footer-links">
+          <li><a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer">Rich Results Test</a></li>
+          <li><a href="https://validator.schema.org/" target="_blank" rel="noopener noreferrer">Schema Validator</a></li>
+          <li><a href="https://schema.org/LocalBusiness" target="_blank" rel="noopener noreferrer">LocalBusiness Spec</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://buymeacoffee.com/ano0osd" target="_blank" rel="noopener" class="bmc-floating">☕ Support Us</a>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

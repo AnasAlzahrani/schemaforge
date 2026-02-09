@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Schema Generator — Free JSON-LD Markup | SchemaForge</title>
+  <meta name="description" content="Generate Recipe schema markup (JSON-LD) for free. Add ingredients, instructions, cook times, nutrition, and more. Get recipe rich results in Google.">
+  <link rel="canonical" href="https://schemaforge.vercel.app/recipe.html">
+  <meta property="og:title" content="Recipe Schema Generator — Free JSON-LD | SchemaForge">
+  <meta property="og:description" content="Generate Recipe schema markup with ingredients, instructions, and nutrition info.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://schemaforge.vercel.app/recipe.html">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Recipe Schema Generator",
+    "description": "Free Recipe schema markup generator with ingredients, instructions, and nutrition.",
+    "url": "https://schemaforge.vercel.app/recipe.html",
+    "isPartOf": { "@type": "WebApplication", "name": "SchemaForge" }
+  }
+  </script>
+  
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body data-generator="recipe">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="navbar-brand">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#14b8a6" fill-opacity="0.15"/><path d="M8 8h4v4H8zM16 8h4v4h-4zM8 16h4v4H8zM16 16h4v4h-4z" fill="#14b8a6"/><path d="M12 10h4M10 12v4M18 12v4M12 18h4" stroke="#14b8a6" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Schema<span class="accent">Forge</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/local-business.html">Local Business</a></li>
+        <li><a href="/article.html">Article</a></li>
+        <li><a href="/product.html">Product</a></li>
+        <li><a href="/event.html">Event</a></li>
+        <li><a href="/howto.html">How-To</a></li>
+        <li><a href="/organization.html">Organization</a></li>
+        <li><a href="/recipe.html" class="active">Recipe</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="generator-page container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span class="sep">/</span> <span>Recipe Schema Generator</span>
+    </div>
+
+    <div class="generator-header">
+      <h1>Recipe Schema <span class="text-accent">Generator</span></h1>
+      <p>Generate Recipe structured data (JSON-LD) with ingredients, step-by-step instructions, cooking times, and nutrition information for Google recipe rich results.</p>
+    </div>
+
+    <div class="generator-layout">
+      <div class="panel">
+        <div class="panel-header">
+          <h2><span class="dot"></span> Recipe Details</h2>
+        </div>
+        <div class="panel-body">
+          <form id="generatorForm" onsubmit="return false;">
+            <div class="form-group">
+              <label>Recipe Name <span class="required">*</span></label>
+              <input type="text" id="recName" placeholder="e.g. Grandma's Chocolate Chip Cookies">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Image URL <span class="required">*</span></label>
+                <input type="url" id="recImage" placeholder="https://example.com/recipe.jpg">
+              </div>
+              <div class="form-group">
+                <label>Author</label>
+                <input type="text" id="recAuthor" placeholder="e.g. Chef Maria">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Date Published</label>
+                <input type="date" id="recDate">
+              </div>
+              <div class="form-group">
+                <label>Yield / Servings</label>
+                <input type="text" id="recYield" placeholder="e.g. 24 cookies">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="recDesc" rows="3" placeholder="A brief description of the recipe..."></textarea>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h3 class="mb-2">⏱️ Timing</h3>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label>Prep Time</label>
+                <input type="text" id="recPrep" placeholder="e.g. PT15M">
+                <span class="form-hint">ISO 8601 format</span>
+              </div>
+              <div class="form-group">
+                <label>Cook Time</label>
+                <input type="text" id="recCook" placeholder="e.g. PT25M">
+              </div>
+              <div class="form-group">
+                <label>Total Time</label>
+                <input type="text" id="recTotal" placeholder="e.g. PT40M">
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h3 class="mb-2">🥕 Ingredients</h3>
+            <div class="multi-input-list" id="recIngredients">
+              <div class="multi-input-row">
+                <input type="text" class="rec-ingredient" placeholder="e.g. 2 cups all-purpose flour">
+                <button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove();">✕</button>
+              </div>
+              <div class="multi-input-row">
+                <input type="text" class="rec-ingredient" placeholder="e.g. 1 cup butter, softened">
+                <button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove();">✕</button>
+              </div>
+              <div class="multi-input-row">
+                <input type="text" class="rec-ingredient" placeholder="e.g. 1 cup sugar">
+                <button type="button" class="btn btn-danger btn-icon btn-sm" onclick="this.parentElement.remove();">✕</button>
+              </div>
+            </div>
+            <button type="button" class="add-item-btn mt-1" onclick="addIngredient()" style="font-size:0.8rem;padding:0.5rem;">+ Add Ingredient</button>
+
+            <div class="section-divider"></div>
+
+            <h3 class="mb-2">📝 Instructions</h3>
+            <div class="dynamic-items" id="recInstructions">
+              <div class="dynamic-item rec-instruction-item">
+                <div class="dynamic-item-header">
+                  <span class="dynamic-item-number">Step 1</span>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeDynamicItem(this)">✕ Remove</button>
+                </div>
+                <div class="form-group">
+                  <label>Instruction</label>
+                  <textarea class="rec-instruction" rows="2" placeholder="e.g. Preheat oven to 375°F (190°C)..."></textarea>
+                </div>
+              </div>
+              <div class="dynamic-item rec-instruction-item">
+                <div class="dynamic-item-header">
+                  <span class="dynamic-item-number">Step 2</span>
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeDynamicItem(this)">✕ Remove</button>
+                </div>
+                <div class="form-group">
+                  <label>Instruction</label>
+                  <textarea class="rec-instruction" rows="2" placeholder="e.g. In a large bowl, cream butter and sugar..."></textarea>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="add-item-btn mt-2" onclick="addInstruction()">
+              + Add Another Step
+            </button>
+
+            <div class="section-divider"></div>
+
+            <h3 class="mb-2">🔥 Nutrition (Optional)</h3>
+            <div class="form-group">
+              <label>Calories</label>
+              <input type="number" id="recCalories" placeholder="e.g. 250">
+              <span class="form-hint">Calories per serving</span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="sticky-panel">
+        <div class="panel">
+          <div class="panel-header">
+            <h2><span class="dot"></span> Generated JSON-LD</h2>
+          </div>
+          <div class="panel-body">
+            <div class="code-actions">
+              <button id="copyBtn" class="btn btn-copy btn-sm" onclick="copySchema()">📋 Copy to Clipboard</button>
+            </div>
+            <div class="code-preview">
+              <pre id="schemaOutput"></pre>
+            </div>
+          </div>
+        </div>
+        <div class="panel mt-2">
+          <div class="panel-header">
+            <h2><span class="dot"></span> Rich Result Preview</h2>
+          </div>
+          <div class="panel-body">
+            <p class="form-hint mb-1">How it may appear in Google search results:</p>
+            <div id="richPreview"></div>
+          </div>
+        </div>
+        <div class="ad-slot ad-slot-sidebar mt-2"><!-- Ad Placement: Sidebar --></div>
+      </div>
+    </div>
+
+    <div class="test-banner mt-4">
+      <div class="test-banner-text">
+        <h3>Test Your Recipe Schema</h3>
+        <p>Validate your recipe markup with Google's Rich Results Test for recipe carousel and rich results.</p>
+      </div>
+      <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Test with Google →</a>
+    </div>
+
+    <div class="ad-slot"><!-- Ad Placement: Below the fold --></div>
+
+    <section class="guide-section">
+      <h2>How to Use Recipe Schema Markup</h2>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="guide-step-number">1</div>
+          <h3>Enter Recipe Info</h3>
+          <p>Fill in the recipe name, author, description, and a high-quality image URL. Google uses these prominently.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">2</div>
+          <h3>Add Timing</h3>
+          <p>Set prep, cook, and total times using ISO 8601 duration format (PT1H = 1 hour, PT30M = 30 minutes).</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">3</div>
+          <h3>List Ingredients & Steps</h3>
+          <p>Add each ingredient on its own line and write clear, step-by-step instructions.</p>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-number">4</div>
+          <h3>Add Nutrition & Test</h3>
+          <p>Optionally add calorie info, then copy the schema and validate with Google's Rich Results Test.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="schema-type-nav container">
+    <h2>Other Schema Generators</h2>
+    <div class="schema-type-pills">
+      <a href="/faq.html" class="schema-type-pill">❓ FAQ</a>
+      <a href="/local-business.html" class="schema-type-pill">🏪 Local Business</a>
+      <a href="/article.html" class="schema-type-pill">📰 Article</a>
+      <a href="/product.html" class="schema-type-pill">🛍️ Product</a>
+      <a href="/event.html" class="schema-type-pill">🎪 Event</a>
+      <a href="/howto.html" class="schema-type-pill">🔧 How-To</a>
+      <a href="/organization.html" class="schema-type-pill">🏢 Organization</a>
+      <a href="/recipe.html" class="schema-type-pill current">🍳 Recipe</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          Built by <a href="https://coef.health" target="_blank" rel="noopener">Coefficients Health Analytics</a> · © 2026 SchemaForge
+        </div>
+        <a href="https://buymeacoffee.com/ano0osd" target="_blank" rel="noopener" class="bmc-footer-btn">☕ Buy Me a Coffee</a>
+        <ul class="footer-links">
+          <li><a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer">Rich Results Test</a></li>
+          <li><a href="https://schema.org/Recipe" target="_blank" rel="noopener noreferrer">Recipe Spec</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://buymeacoffee.com/ano0osd" target="_blank" rel="noopener" class="bmc-floating">☕ Support Us</a>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
