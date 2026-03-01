@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       contents: chatMessages,
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1500,
+        maxOutputTokens: 4000,
         topP: 0.9,
       },
       safetySettings: [
