@@ -5,7 +5,7 @@
     { "source": "/recipe", "destination": "/consult" },
     { "source": "/howto", "destination": "/consult" },
     { "source": "/article", "destination": "/consult" },
-    { "source": "/checklist", "destination": "/consult" },
+
     { "source": "/faq", "destination": "/consult" },
     { "source": "/event", "destination": "/consult" },
     { "source": "/product", "destination": "/consult" },
