@@ -1,3 +1,16 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/organization", "destination": "/consult" },
+    { "source": "/recipe", "destination": "/consult" },
+    { "source": "/howto", "destination": "/consult" },
+    { "source": "/article", "destination": "/consult" },
+    { "source": "/checklist", "destination": "/consult" },
+    { "source": "/faq", "destination": "/consult" },
+    { "source": "/event", "destination": "/consult" },
+    { "source": "/product", "destination": "/consult" },
+    { "source": "/local-business", "destination": "/consult" },
+    { "source": "/tools", "destination": "/consult" },
+    { "source": "/blog/:path*", "destination": "/consult" }
+  ]
 }
