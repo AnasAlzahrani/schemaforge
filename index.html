@@ -23,10 +23,11 @@
   "description": "AI-powered study design consultation for clinical researchers. Power calculations, causal DAGs, and reviewer rebuttals in minutes.",
   "url": "https://schemaforge-seven.vercel.app/",
   "offers": {
-    "@type": "Offer",
-    "price": "99.00",
+    "@type": "AggregateOffer",
+    "lowPrice": "0",
+    "highPrice": "99.00",
     "priceCurrency": "USD",
-    "priceValidUntil": "2026-12-31"
+    "offerCount": "3"
   },
   "creator": {
     "@type": "Organization",
@@ -237,7 +238,7 @@ section{padding:5rem 1.5rem;max-width:960px;margin:0 auto}
   <h1>SchemaForge</h1>
   <p>Your next study fails if the design is weak. Paste your research aim — get power calculations, causal DAGs, and reviewer rebuttals in 20 minutes. Not templates. Real methodological consultation.</p>
   <div class="cta-row">
-    <a href="#chat" class="cta-primary">Start Free 14-Day Trial →</a>
+    <a href="/consult" class="cta-primary">Try Free — No Card Required →</a>
     <a href="#studies" class="cta-secondary">See How It Works</a>
   </div>
   <div class="stats-bar">
@@ -358,52 +359,53 @@ section{padding:5rem 1.5rem;max-width:960px;margin:0 auto}
 <section id="pricing">
   <div class="section-title">
     <h2>Simple Pricing</h2>
-    <p>14-day free trial. No credit card required. Cancel anytime.</p>
+    <p>Free forever to start. Upgrade when you need more.</p>
   </div>
   <div class="pricing-toggle">
     <span class="active" id="monthLabel">Monthly</span>
     <div class="toggle-switch" id="pricingToggle" onclick="togglePricing()"></div>
     <span id="yearLabel">Annual</span>
   </div>
+  <p style="color:var(--dim);font-size:.85rem;text-align:center;margin-bottom:2rem">Replace a $500 methodology consultation with an AI study design architect.</p>
   <div class="pricing-cards">
     <div class="price-card">
-      <h3>Researcher</h3>
-      <div class="price">$<span class="price-val">99</span><span>/mo</span></div>
+      <h3>Free</h3>
+      <div class="price">$<span class="price-val">0</span><span>/mo</span></div>
       <div class="savings">&nbsp;</div>
       <ul>
-        <li>10 consultations/month</li>
-        <li>All study designs</li>
-        <li>Validity threat analysis</li>
+        <li>2 consultations/month</li>
+        <li>All study design types</li>
+        <li>Basic validity analysis</li>
+        <li>Study design checklist</li>
+        <li>Community support</li>
+      </ul>
+      <button onclick="window.location.href='/consult'">Start Free →</button>
+    </div>
+    <div class="price-card featured">
+      <h3>Researcher</h3>
+      <div class="price">$<span class="price-val">29</span><span>/mo</span></div>
+      <div class="savings">&nbsp;</div>
+      <ul>
+        <li>Unlimited consultations</li>
+        <li>All study designs + causal methods</li>
         <li>DAG builder & power analysis</li>
+        <li>Rebuttal letter generator</li>
         <li>Export PDF reports</li>
       </ul>
       <button>Get Started</button>
     </div>
-    <div class="price-card featured">
+    <div class="price-card">
       <h3>Lab / Team</h3>
-      <div class="price">$<span class="price-val">299</span><span>/mo</span></div>
+      <div class="price">$<span class="price-val">99</span><span>/mo</span></div>
       <div class="savings">&nbsp;</div>
       <ul>
-        <li>Unlimited consultations</li>
-        <li>Advanced causal methods</li>
-        <li>Rebuttal letter generator</li>
-        <li>Priority support</li>
+        <li>Everything in Researcher</li>
         <li>5 team seats</li>
+        <li>Priority support</li>
+        <li>Team usage dashboard</li>
+        <li>Custom methodology rules</li>
       </ul>
       <button>Get Started</button>
-    </div>
-    <div class="price-card">
-      <h3>Institution</h3>
-      <div class="price">$<span class="price-val">499</span><span>/mo</span></div>
-      <div class="savings">&nbsp;</div>
-      <ul>
-        <li>Everything in Lab</li>
-        <li>Unlimited seats</li>
-        <li>SSO & audit logs</li>
-        <li>Custom methodology rules</li>
-        <li>Dedicated account manager</li>
-      </ul>
-      <button>Contact Sales</button>
     </div>
   </div>
 </section>
@@ -417,21 +419,22 @@ section{padding:5rem 1.5rem;max-width:960px;margin:0 auto}
   <div style="overflow-x:auto">
     <table class="comparison-table">
       <thead>
-        <tr><th>Feature</th><th>Researcher</th><th>Lab / Team</th><th>Institution</th></tr>
+        <tr><th>Feature</th><th>Free</th><th>Researcher</th><th>Lab / Team</th></tr>
       </thead>
       <tbody>
-        <tr><td>AI Consultations</td><td>10/mo</td><td>Unlimited</td><td>Unlimited</td></tr>
+        <tr><td>AI Consultations</td><td>2/mo</td><td>Unlimited</td><td>Unlimited</td></tr>
         <tr><td>Study Design Types</td><td>All types</td><td>All types</td><td>All types + custom</td></tr>
-        <tr><td>Causal Inference (PSM/IPW/IV)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
-        <tr><td>DAG Builder</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
-        <tr><td>Power / Sample Size Calculator</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
-        <tr><td>PDF Report Export</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
-        <tr><td>Team Collaboration</td><td class="cross">✗</td><td>5 seats</td><td>Unlimited</td></tr>
-        <tr><td>SSO & Audit Logs</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
-        <tr><td>Priority Support</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Causal Inference (PSM/IPW/IV)</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>DAG Builder</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Power / Sample Size Calculator</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>PDF Report Export</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Rebuttal Letter Generator</td><td class="cross">✗</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Team Seats</td><td>1</td><td>1</td><td>5</td></tr>
+        <tr><td>Priority Support</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
         <tr><td>Custom Methodology Rules</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td></tr>
       </tbody>
     </table>
+    <p style="text-align:center;margin-top:1.5rem;font-size:.85rem;color:var(--dim)">Need institutional licensing or 10+ seats? <a href="mailto:endoglin9@gmail.com">Contact us</a> for custom pricing.</p>
   </div>
 </section>
 
@@ -636,7 +639,7 @@ function drawDAG(method){
 
 // ===== PRICING TOGGLE =====
 let annual=false;
-const prices={monthly:[99,249,499],annual:[82.5,199,399]};
+const prices={monthly:[0,29,99],annual:[0,24,79]};
 function togglePricing(){
   annual=!annual;
   document.getElementById('pricingToggle').classList.toggle('on',annual);
@@ -645,7 +648,7 @@ function togglePricing(){
   const vals=annual?prices.annual:prices.monthly;
   document.querySelectorAll('.price-val').forEach((el,i)=>el.textContent=vals[i]);
   document.querySelectorAll('.savings').forEach((el,i)=>{
-    if(annual){const annualTotal=Math.round(prices.annual[i]*12);const saved=prices.monthly[i]*12-annualTotal;el.textContent=`$${annualTotal}/yr — Save $${saved}`;}
+    if(annual&&prices.monthly[i]>0){const annualTotal=Math.round(prices.annual[i]*12);const saved=prices.monthly[i]*12-annualTotal;el.textContent=`$${annualTotal}/yr — Save $${saved}`;}
     else el.innerHTML='&nbsp;';
   });
 }
