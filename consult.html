@@ -52,7 +52,21 @@ textarea::placeholder{color:var(--dim)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .tag{display:inline-block;background:rgba(6,182,212,.1);border:1px solid var(--accent2);border-radius:4px;padding:2px 8px;font-size:.8rem;color:var(--accent);margin:2px}
 footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;color:var(--dim);font-size:.85rem}
-@media(max-width:600px){.hero h1{font-size:1.4rem}.step{padding:1.25rem}}
+.examples{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.examples-label{font-size:.8rem;color:var(--dim)}
+.example-btn{background:transparent;border:1px solid var(--border);color:var(--dim);padding:.35rem .75rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.example-btn:hover{border-color:var(--accent);color:var(--accent)}
+#result .md-content h2{color:var(--accent);font-size:1.05rem;margin:1.5rem 0 .5rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
+#result .md-content h2:first-child{margin-top:0}
+#result .md-content h3{color:var(--accent);font-size:.95rem;margin:1rem 0 .4rem}
+#result .md-content ul{margin:.5rem 0;padding-left:1.25rem}
+#result .md-content li{margin:.25rem 0}
+#result .md-content strong{color:var(--text)}
+#result .md-content code{background:rgba(6,182,212,.1);padding:1px 5px;border-radius:3px;font-size:.9em}
+#result .md-content p{margin:.5rem 0}
+.stream-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+@media(max-width:600px){.hero h1{font-size:1.4rem}.step{padding:1.25rem}.examples{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -69,6 +83,12 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 <div class="step">
 <h2><span class="num">1</span> Your Research Aim</h2>
 <textarea id="aim" placeholder="e.g., We want to determine whether early initiation of SGLT2 inhibitors (within 30 days of T2DM diagnosis) reduces the 5-year risk of major adverse cardiovascular events compared to delayed initiation (>6 months)."></textarea>
+<div class="examples">
+<span class="examples-label">Try an example:</span>
+<button class="example-btn" onclick="loadExample(0)">RCT — Drug efficacy</button>
+<button class="example-btn" onclick="loadExample(1)">Cohort — Surgical outcomes</button>
+<button class="example-btn" onclick="loadExample(2)">Claims — Treatment timing</button>
+</div>
 </div>
 
 <div class="step">
@@ -101,6 +121,33 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 </footer>
 
 <script>
+const EXAMPLES = [
+  {
+    aim: "We want to evaluate whether a novel GLP-1 receptor agonist (semaglutide 2.4mg weekly) reduces HbA1c more effectively than standard-dose metformin (1500mg/day) in treatment-naïve type 2 diabetes patients over 52 weeks.",
+    type: "rct",
+    context: "Planning a phase III trial. Budget for ~500 patients across 12 sites. Primary endpoint: change in HbA1c from baseline. Key secondary: weight loss, cardiovascular events."
+  },
+  {
+    aim: "Does robotic-assisted surgery reduce 30-day mortality and major complications compared to open surgery for pancreaticoduodenectomy (Whipple procedure) in high-volume centers?",
+    type: "cohort",
+    context: "We have access to NSQIP data (2015-2024), approximately 45,000 Whipple procedures. Concerned about selection bias — sicker patients likely get open surgery."
+  },
+  {
+    aim: "Does early statin initiation (within 30 days of acute MI) reduce 1-year all-cause mortality compared to delayed initiation (31-180 days) in elderly patients (≥75 years)?",
+    type: "claims",
+    context: "Using Medicare claims data (2018-2023). ~200,000 eligible patients. Concerned about immortal time bias and confounding by indication — healthier patients may fill prescriptions earlier."
+  }
+];
+
+function loadExample(i) {
+  const ex = EXAMPLES[i];
+  document.getElementById('aim').value = ex.aim;
+  document.getElementById('context').value = ex.context;
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.toggle('selected', o.dataset.val === ex.type);
+  });
+}
+
 // Option selection
 document.querySelectorAll('.opt').forEach(o => {
   o.addEventListener('click', () => {
@@ -119,6 +166,20 @@ function copyResult(btn) {
   }
 }
 
+function renderMarkdown(md) {
+  return md
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
 async function runConsult() {
   const aim = document.getElementById('aim').value.trim();
   if (!aim) { alert('Please describe your research aim.'); return; }
@@ -134,6 +195,7 @@ async function runConsult() {
   btn.disabled = true;
   loading.style.display = 'block';
   result.style.display = 'none';
+  window._lastConsultRaw = '';
 
   const systemPrompt = `You are SchemaForge, an expert study design consultant built by a physician-scientist with 20+ years of methodological expertise. You think like a causal inference methodologist — design comes before statistics, assumptions precede models.
 
@@ -183,40 +245,74 @@ Provide a complete study design consultation.`;
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userMsg }
-        ]
+        ],
+        stream: true
       })
     });
-    
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-    
-    // Store raw text for copy
-    window._lastConsultRaw = data.reply;
-    
-    // Markdown rendering
-    let html = data.reply
-      .replace(/## (.+)/g, '<h3>$1</h3>')
-      .replace(/### (.+)/g, '<h3 style="font-size:.9rem">$1</h3>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code style="background:rgba(6,182,212,.1);padding:1px 5px;border-radius:3px;font-size:.9em">$1</code>')
-      .replace(/^\d+\. /gm, '• ')
-      .replace(/\n- /g, '\n• ')
-      .replace(/\n\n/g, '<br><br>');
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(err);
+    }
+
+    loading.style.display = 'none';
+    result.style.display = 'block';
     
     const actions = `<div class="result-actions">
       <button onclick="copyResult(this)">📋 Copy to Clipboard</button>
       <button onclick="window.print()">🖨️ Print / PDF</button>
     </div>`;
+    result.innerHTML = actions + '<div class="md-content"></div>';
+    const contentEl = result.querySelector('.md-content');
     
-    result.innerHTML = actions + html;
-    result.style.display = 'block';
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // keep incomplete line
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (!data || data === '[DONE]') continue;
+        
+        try {
+          const parsed = JSON.parse(data);
+          const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (text) {
+            fullText += text;
+            window._lastConsultRaw = fullText;
+            contentEl.innerHTML = renderMarkdown(fullText) + '<span class="stream-cursor"></span>';
+            result.scrollTop = result.scrollHeight;
+          }
+        } catch (e) { /* skip unparseable chunks */ }
+      }
+    }
+
+    // Final render without cursor
+    contentEl.innerHTML = renderMarkdown(fullText);
+    
+    // Save to localStorage history
+    try {
+      const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
+      history.unshift({ aim, type: studyType, context, result: fullText, date: new Date().toISOString() });
+      if (history.length > 20) history.length = 20;
+      localStorage.setItem('sf_history', JSON.stringify(history));
+    } catch(e) {}
+
   } catch (e) {
+    loading.style.display = 'none';
     result.innerHTML = `<span style="color:var(--red)">Error: ${e.message}. Please try again.</span>`;
     result.style.display = 'block';
   } finally {
     btn.disabled = false;
-    loading.style.display = 'none';
   }
 }
 </script>
