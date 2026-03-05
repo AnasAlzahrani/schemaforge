@@ -66,7 +66,25 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 #result .md-content p{margin:.5rem 0}
 .stream-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
 @keyframes blink{50%{opacity:0}}
-@media(max-width:600px){.hero h1{font-size:1.4rem}.step{padding:1.25rem}.examples{flex-direction:column;align-items:flex-start}}
+/* Follow-up chat */
+.followup-box{margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.followup-box h3{font-size:.95rem;margin-bottom:.75rem;color:var(--dim)}
+.followup-input{display:flex;gap:.5rem}
+.followup-input input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:var(--font);font-size:.9rem;outline:none;transition:border .2s}
+.followup-input input:focus{border-color:var(--accent)}
+.followup-input input::placeholder{color:var(--dim)}
+.followup-input button{background:var(--accent);color:#000;border:none;padding:.75rem 1.25rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.followup-input button:hover{background:var(--accent2);color:#fff}
+.followup-input button:disabled{opacity:.5;cursor:not-allowed}
+.followup-suggestions{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.followup-suggestions button{background:transparent;border:1px solid var(--border);color:var(--dim);padding:.3rem .7rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.followup-suggestions button:hover{border-color:var(--accent);color:var(--accent)}
+.chat-history{margin-top:1rem}
+.chat-msg{padding:1rem;border-radius:8px;margin-bottom:.75rem;font-size:.9rem;line-height:1.6}
+.chat-msg.user{background:rgba(6,182,212,.08);border:1px solid var(--accent2)}
+.chat-msg.assistant{background:var(--surface2);border:1px solid var(--border)}
+.chat-msg .msg-label{font-size:.75rem;color:var(--dim);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:600px){.hero h1{font-size:1.4rem}.step{padding:1.25rem}.examples{flex-direction:column;align-items:flex-start}.followup-input{flex-direction:column}.followup-input button{width:100%}}
 </style>
 </head>
 <body>
@@ -197,39 +215,46 @@ async function runConsult() {
   result.style.display = 'none';
   window._lastConsultRaw = '';
 
-  const systemPrompt = `You are SchemaForge, an expert study design consultant built by a physician-scientist with 20+ years of methodological expertise. You think like a causal inference methodologist — design comes before statistics, assumptions precede models.
+  const systemPrompt = `You are SchemaForge, an expert study design consultant. You think like a causal inference methodologist trained at Harvard CAUSALab and Mount Sinai — design precedes statistics, assumptions precede models, estimands precede estimators.
 
-Given a research aim, produce a structured study design consultation with these sections:
+For an INITIAL consultation (first message), produce a structured design with these sections:
 
 ## RECOMMENDED DESIGN
-- Specific design name and justification
-- Why this design over alternatives (be explicit about trade-offs)
+- Name the specific design (target trial emulation, parallel RCT, nested case-control, etc.)
+- Justify WHY over alternatives — name the alternative you rejected and why
+- State the target trial explicitly if observational
 
 ## CAUSAL STRUCTURE
-- Key exposure, outcome, confounders, mediators, colliders
-- Describe the implied DAG in words (what causes what)
-- Identify the estimand (ATE, ATT, CATE, etc.)
+- Exposure (with operational definition and timing), outcome (with measurement window), confounders (time-fixed and time-varying), mediators, potential colliders
+- Describe the DAG: which arrows exist and which are absent (justify exclusion restrictions)
+- Identify the causal estimand: ATE, ATT, CATE, or SACE — and why that one
+- Name the identification assumptions required (exchangeability, positivity, consistency, no interference)
 
 ## THREATS TO VALIDITY
-- Internal validity threats specific to this design
-- Selection bias, confounding, information bias risks
-- Time-related biases (immortal time, lead time, etc.)
+- Internal: unmeasured confounding, selection bias (specify the mechanism — e.g., conditioning on a collider, loss to follow-up, healthy user bias)
+- Time-related: immortal time bias, time-zero alignment, prevalent user bias, depletion of susceptibles
+- Measurement: outcome misclassification, exposure misclassification, detection bias
+- For each threat, state whether your design mitigates it or whether a sensitivity analysis is needed
 
 ## POWER & SAMPLE SIZE
-- Key parameters needed for power calculation
-- Rough estimate with assumptions stated
-- Sensitivity considerations
+- State the minimum detectable effect size (clinical, not just statistical)
+- Key parameters: baseline event rate, expected effect, alpha, power, ICC if clustered
+- Provide a concrete estimate with stated assumptions
+- Note what happens to power under plausible violations (e.g., 20% dropout, weaker effect)
 
 ## ANALYSIS APPROACH
-- Primary analysis method with justification
-- Sensitivity analyses to run
-- How to handle missing data
+- Primary estimator: IPW, AIPW, PSM, IV, difference-in-differences, etc. — justify the choice
+- How to estimate the propensity score or instrument (if applicable)
+- Pre-specified sensitivity analyses: E-value, quantitative bias analysis, negative controls
+- Missing data strategy: MAR/MNAR assessment, multiple imputation or IPW for missingness
 
 ## REVIEWER REBUTTAL PREP
-- Top 3 criticisms a methods-savvy reviewer will raise
-- Your preemptive defense for each
+- Top 3 methodological criticisms a BMJ/JAMA statistical reviewer will raise
+- Your preemptive defense for each, with citations to methodological literature where possible
 
-Be specific, not generic. If the aim is vague, state what assumptions you're making. Never say "it depends" without committing to a recommendation. Use technical language appropriate for a clinical researcher audience.`;
+For FOLLOW-UP messages, answer the specific question directly. Stay in your role as a rigorous methodologist. Be concise but thorough. You can reference your earlier consultation.
+
+Be specific, not generic. Commit to recommendations. Use technical language appropriate for a clinical researcher audience. When uncertain, state your assumption and proceed.`;
 
   const userMsg = `Research Aim: ${aim}
 ${studyType !== 'unsure' ? `Preferred/Available Design: ${studyType}` : ''}
@@ -299,6 +324,16 @@ Provide a complete study design consultation.`;
     // Final render without cursor
     contentEl.innerHTML = renderMarkdown(fullText);
     
+    // Store conversation for follow-ups
+    window._chatMessages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMsg },
+      { role: 'assistant', content: fullText }
+    ];
+
+    // Show follow-up box
+    showFollowupBox();
+    
     // Save to localStorage history
     try {
       const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
@@ -313,6 +348,117 @@ Provide a complete study design consultation.`;
     result.style.display = 'block';
   } finally {
     btn.disabled = false;
+  }
+}
+
+// Follow-up conversation
+function showFollowupBox() {
+  let box = document.getElementById('followup');
+  if (box) return; // already shown
+  
+  box = document.createElement('div');
+  box.id = 'followup';
+  box.className = 'followup-box';
+  box.innerHTML = `
+    <h3>💬 Ask a follow-up question</h3>
+    <div class="followup-suggestions">
+      <button onclick="askFollowup(this.textContent)">What if my sample is smaller?</button>
+      <button onclick="askFollowup(this.textContent)">How do I handle unmeasured confounding?</button>
+      <button onclick="askFollowup(this.textContent)">Draft the methods section</button>
+      <button onclick="askFollowup(this.textContent)">What R/Stata code would I need?</button>
+    </div>
+    <div class="followup-input">
+      <input type="text" id="followupInput" placeholder="e.g., What if I can't measure BMI — how does that change the DAG?" onkeydown="if(event.key==='Enter')askFollowup()">
+      <button id="followupBtn" onclick="askFollowup()">Ask →</button>
+    </div>
+    <div class="chat-history" id="chatHistory"></div>
+  `;
+  document.querySelector('.main').appendChild(box);
+  document.getElementById('followupInput').focus();
+}
+
+async function askFollowup(text) {
+  const input = document.getElementById('followupInput');
+  const question = text || input.value.trim();
+  if (!question || !window._chatMessages) return;
+  
+  input.value = '';
+  const btn = document.getElementById('followupBtn');
+  btn.disabled = true;
+  
+  const history = document.getElementById('chatHistory');
+  
+  // Show user message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg user';
+  userDiv.innerHTML = `<div class="msg-label">You</div>${question}`;
+  history.appendChild(userDiv);
+  
+  // Add to conversation
+  window._chatMessages.push({ role: 'user', content: question });
+  
+  // Show streaming response
+  const assistantDiv = document.createElement('div');
+  assistantDiv.className = 'chat-msg assistant';
+  assistantDiv.innerHTML = `<div class="msg-label">SchemaForge</div><div class="md-content"><span class="stream-cursor"></span></div>`;
+  history.appendChild(assistantDiv);
+  const contentEl = assistantDiv.querySelector('.md-content');
+  
+  history.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: window._chatMessages, stream: true })
+    });
+
+    if (!resp.ok) throw new Error(await resp.text());
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (!data || data === '[DONE]') continue;
+        
+        try {
+          const parsed = JSON.parse(data);
+          const t = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (t) {
+            fullText += t;
+            contentEl.innerHTML = renderMarkdown(fullText) + '<span class="stream-cursor"></span>';
+            history.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }
+        } catch (e) {}
+      }
+    }
+
+    contentEl.innerHTML = renderMarkdown(fullText);
+    window._chatMessages.push({ role: 'assistant', content: fullText });
+    
+    // Keep conversation manageable (last 10 exchanges + system)
+    if (window._chatMessages.length > 21) {
+      const sys = window._chatMessages[0];
+      window._chatMessages = [sys, ...window._chatMessages.slice(-20)];
+    }
+
+  } catch (e) {
+    contentEl.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    input.focus();
   }
 }
 </script>
