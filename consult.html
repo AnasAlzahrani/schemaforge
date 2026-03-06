@@ -64,6 +64,15 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 #result .md-content strong{color:var(--text)}
 #result .md-content code{background:rgba(6,182,212,.1);padding:1px 5px;border-radius:3px;font-size:.9em}
 #result .md-content p{margin:.5rem 0}
+.md-table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.88rem}
+.md-table th,.md-table td{border:1px solid var(--border);padding:.5rem .75rem;text-align:left}
+.md-table th{background:var(--surface2);color:var(--accent);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.02em}
+.md-table td{background:transparent}
+.md-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.md-table code{font-size:.85em}
+blockquote{border-left:3px solid var(--accent2);padding:.5rem 1rem;margin:.5rem 0;color:var(--dim);background:rgba(6,182,212,.03);border-radius:0 6px 6px 0}
+.chat-msg .md-table{font-size:.85rem}
+.chat-msg .md-table th,.chat-msg .md-table td{padding:.35rem .5rem}
 .stream-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
 @keyframes blink{50%{opacity:0}}
 /* Follow-up chat */
@@ -174,6 +183,113 @@ document.querySelectorAll('.opt').forEach(o => {
   });
 });
 
+// Session persistence — restore active conversation on refresh
+function saveSession() {
+  if (!window._chatMessages || window._chatMessages.length < 3) return;
+  try {
+    const aim = document.getElementById('aim').value;
+    const context = document.getElementById('context').value;
+    const selected = document.querySelector('.opt.selected');
+    localStorage.setItem('sf_session', JSON.stringify({
+      messages: window._chatMessages,
+      aim, context,
+      studyType: selected?.dataset.val || '',
+      ts: Date.now()
+    }));
+  } catch(e) {}
+}
+
+function restoreSession() {
+  try {
+    const raw = localStorage.getItem('sf_session');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    // Expire after 2 hours
+    if (Date.now() - s.ts > 7200000) { localStorage.removeItem('sf_session'); return; }
+    if (!s.messages || s.messages.length < 3) return;
+    
+    // Restore form state
+    if (s.aim) document.getElementById('aim').value = s.aim;
+    if (s.context) document.getElementById('context').value = s.context;
+    if (s.studyType) {
+      document.querySelectorAll('.opt').forEach(o => {
+        o.classList.toggle('selected', o.dataset.val === s.studyType);
+      });
+    }
+    
+    // Restore conversation
+    window._chatMessages = s.messages;
+    const result = document.getElementById('result');
+    
+    // Find first assistant response
+    const firstAssistant = s.messages.find(m => m.role === 'assistant');
+    if (!firstAssistant) return;
+    
+    window._lastConsultRaw = firstAssistant.content;
+    const actions = `<div class="result-actions">
+      <button onclick="copyResult(this)">📋 Copy to Clipboard</button>
+      <button onclick="exportConsult()">📄 Export (.md)</button>
+      <button onclick="window.print()">🖨️ Print / PDF</button>
+    </div>`;
+    result.innerHTML = actions + '<div class="md-content">' + renderMarkdown(firstAssistant.content) + '</div>';
+    result.style.display = 'block';
+    
+    showFollowupBox();
+    
+    // Restore follow-up messages
+    const history = document.getElementById('chatHistory');
+    const followups = s.messages.filter(m => m.role !== 'system').slice(2); // skip initial user+assistant
+    for (let i = 0; i < followups.length; i++) {
+      const m = followups[i];
+      const div = document.createElement('div');
+      div.className = 'chat-msg ' + (m.role === 'user' ? 'user' : 'assistant');
+      div.innerHTML = `<div class="msg-label">${m.role === 'user' ? 'You' : 'SchemaForge'}</div>` +
+        (m.role === 'assistant' ? '<div class="md-content">' + renderMarkdown(m.content) + '</div>' : m.content);
+      history.appendChild(div);
+    }
+    
+    // Show restore notice
+    const notice = document.createElement('div');
+    notice.style.cssText = 'text-align:center;padding:.5rem;font-size:.8rem;color:var(--dim);margin-bottom:.5rem';
+    notice.innerHTML = '↻ Previous session restored · <a href="#" onclick="clearSession();return false" style="color:var(--accent)">Start fresh</a>';
+    result.parentElement.insertBefore(notice, result);
+  } catch(e) { console.error('restore failed', e); }
+}
+
+function clearSession() {
+  localStorage.removeItem('sf_session');
+  location.reload();
+}
+
+function exportConsult() {
+  if (!window._chatMessages || window._chatMessages.length < 3) return;
+  let md = '# SchemaForge Study Design Consultation\n';
+  md += `_Generated ${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}_\n\n`;
+  
+  const aim = document.getElementById('aim').value;
+  if (aim) md += `**Research Aim:** ${aim}\n\n---\n\n`;
+  
+  for (const m of window._chatMessages) {
+    if (m.role === 'system') continue;
+    if (m.role === 'user' && m === window._chatMessages[1]) continue; // skip initial system prompt
+    if (m.role === 'user') md += `\n---\n\n**Follow-up:** ${m.content}\n\n`;
+    if (m.role === 'assistant') md += m.content + '\n\n';
+  }
+  
+  md += '---\n_Consultation by [SchemaForge](https://schemaforge-seven.vercel.app) · Coefficients_\n';
+  
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `schemaforge-consultation-${Date.now()}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initialize session restore
+document.addEventListener('DOMContentLoaded', restoreSession);
+
 function copyResult(btn) {
   if (window._lastConsultRaw) {
     navigator.clipboard.writeText(window._lastConsultRaw).then(() => {
@@ -185,6 +301,33 @@ function copyResult(btn) {
 }
 
 function renderMarkdown(md) {
+  // Process tables first (before line-level transforms)
+  md = md.replace(/(?:^|\n)((?:\|.+\|\n)+)/g, (match, tableBlock) => {
+    const rows = tableBlock.trim().split('\n').filter(r => r.trim());
+    if (rows.length < 2) return match;
+    // Check if row 2 is a separator
+    const isSep = r => /^\|[\s\-:]+\|$/.test(r.trim());
+    let html = '<table class="md-table">';
+    let startBody = 1;
+    if (rows.length >= 2 && isSep(rows[1])) {
+      const cells = rows[0].split('|').filter(c => c.trim() !== '');
+      html += '<thead><tr>' + cells.map(c => `<th>${c.trim()}</th>`).join('') + '</tr></thead>';
+      startBody = 2;
+    }
+    html += '<tbody>';
+    for (let i = startBody; i < rows.length; i++) {
+      if (isSep(rows[i])) continue;
+      const cells = rows[i].split('|').filter(c => c.trim() !== '');
+      html += '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+    }
+    html += '</tbody></table>';
+    return '\n' + html + '\n';
+  });
+
+  // Blockquotes
+  md = md.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+  md = md.replace(/<\/blockquote>\n<blockquote>/g, '<br>');
+
   return md
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
@@ -285,6 +428,7 @@ Provide a complete study design consultation.`;
     
     const actions = `<div class="result-actions">
       <button onclick="copyResult(this)">📋 Copy to Clipboard</button>
+      <button onclick="exportConsult()">📄 Export (.md)</button>
       <button onclick="window.print()">🖨️ Print / PDF</button>
     </div>`;
     result.innerHTML = actions + '<div class="md-content"></div>';
@@ -331,7 +475,8 @@ Provide a complete study design consultation.`;
       { role: 'assistant', content: fullText }
     ];
 
-    // Show follow-up box
+    // Persist session and show follow-up box
+    saveSession();
     showFollowupBox();
     
     // Save to localStorage history
@@ -453,6 +598,9 @@ async function askFollowup(text) {
       const sys = window._chatMessages[0];
       window._chatMessages = [sys, ...window._chatMessages.slice(-20)];
     }
+    
+    // Persist session
+    saveSession();
 
   } catch (e) {
     contentEl.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
