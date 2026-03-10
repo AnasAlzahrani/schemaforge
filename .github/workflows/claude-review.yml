@@ -1,0 +1,49 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  review:
+    if: |
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --model claude-opus-4-6
+            --max-turns 10
+          prompt: |
+            Review this PR for:
+            - Logic errors and bugs that would break production
+            - Security vulnerabilities (API key leaks, injection, auth bypass)
+            - Edge cases and error handling gaps
+            - Regressions that break existing behavior
+            
+            Tag findings by severity:
+            🔴 Must fix before merge
+            🟡 Nit — worth fixing but not blocking
+            🟣 Pre-existing issue not introduced by this PR
+            
+            If no issues found, post a short confirmation.
