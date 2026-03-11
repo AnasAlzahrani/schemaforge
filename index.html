@@ -84,9 +84,51 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:var(--body-font);background-color:var(--bg);color:var(--text);min-height:100vh;line-height:1.65;background-image:repeating-linear-gradient(0deg,var(--grid) 0 1px,transparent 1px 16px),repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 16px);background-size:16px 16px}
+body > *:not(#xp-canvas):not(.particle-layer):not(.achievement-toast){position:relative;z-index:1}
 a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 img{max-width:100%;height:auto}
 section{padding:3rem 1.5rem;max-width:var(--max-width);margin:0 auto}
+
+.typing-cursor{display:inline-block;margin-left:6px}
+.reveal-section{opacity:0;transform:translateY(20px);transition:opacity 300ms ease,transform 300ms ease}
+.reveal-section.reveal-visible{opacity:1;transform:translateY(0)}
+.stat.reveal-section{transition-delay:0ms}
+
+.msg.pop-in{animation:chat-pop 220ms ease-out}
+@keyframes chat-pop{
+  0%{transform:scale(0.8)}
+  70%{transform:scale(1.04)}
+  100%{transform:scale(1)}
+}
+
+.study-card:hover img{animation:icon-bounce 240ms ease-in-out}
+@keyframes icon-bounce{
+  0%{transform:translateY(0)}
+  40%{transform:translateY(-4px)}
+  100%{transform:translateY(0)}
+}
+.dust-particle{position:absolute;width:4px;height:4px;background:var(--accent);opacity:.9;pointer-events:none;image-rendering:pixelated;animation:dust-burst 320ms ease-out forwards}
+@keyframes dust-burst{
+  0%{transform:translate(0,0) scale(1);opacity:.9}
+  100%{transform:translate(var(--dx),var(--dy)) scale(.6);opacity:0}
+}
+
+.screen-shake{animation:screen-shake 120ms steps(2,end)}
+@keyframes screen-shake{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(1px,-1px)}
+  50%{transform:translate(-1px,1px)}
+  75%{transform:translate(1px,1px)}
+  100%{transform:translate(0,0)}
+}
+
+.achievement-toast{position:fixed;right:16px;bottom:16px;background:var(--surface-2);border:2px solid var(--accent-2);box-shadow:var(--pixel-frame);padding:.75rem .9rem;font-family:var(--heading-font);font-size:.7rem;letter-spacing:.03em;color:var(--text);transform:translateX(120%);opacity:0;z-index:120;transition:transform 260ms ease,opacity 260ms ease}
+.achievement-toast.show{transform:translateX(0);opacity:1}
+.achievement-toast.hide{transform:translateX(120%);opacity:0}
+
+#xp-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.particle-layer{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.pixel-particle{position:absolute;width:4px;height:4px;image-rendering:pixelated}
 
 .nav{position:sticky;top:0;z-index:100;background:var(--surface);padding:0.9rem 1.5rem;box-shadow:var(--pixel-frame)}
 .nav-inner{max-width:var(--max-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem}
@@ -198,6 +240,7 @@ section{padding:3rem 1.5rem;max-width:var(--max-width);margin:0 auto}
 </style>
 </head>
 <body>
+<canvas id="xp-canvas" aria-hidden="true"></canvas>
 
 <nav class="nav">
   <div class="nav-inner">
@@ -544,7 +587,7 @@ function renderMarkdown(md) {
 
 function addMessage(role, content) {
   const div = document.createElement('div');
-  div.className = 'msg ' + role;
+  div.className = 'msg ' + role + ' pop-in';
   const avatar = role === 'assistant' ? '📄' : '👤';
   const html = renderMarkdown(content);
   div.innerHTML = `<div class="avatar">${avatar}</div><div class="bubble">${html}</div>`;
@@ -588,6 +631,283 @@ async function send() {
 }
 
 input.addEventListener('input', function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+
+// ===== MINECRAFT INTERACTIONS =====
+const xpCanvas = document.getElementById('xp-canvas');
+const xpCtx = xpCanvas.getContext('2d');
+const xpParticles = [];
+const blockLayer = document.createElement('div');
+blockLayer.className = 'particle-layer';
+document.body.appendChild(blockLayer);
+
+function resizeXpCanvas() {
+  xpCanvas.width = window.innerWidth;
+  xpCanvas.height = window.innerHeight;
+}
+resizeXpCanvas();
+window.addEventListener('resize', resizeXpCanvas);
+
+function createXpParticle() {
+  return {
+    x: Math.random() * xpCanvas.width,
+    y: xpCanvas.height + Math.random() * 120,
+    size: 3 + Math.random(),
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: -0.25 - Math.random() * 0.25,
+    alpha: 0.35 + Math.random() * 0.35
+  };
+}
+
+for (let i = 0; i < 30; i++) xpParticles.push(createXpParticle());
+
+function animateXpParticles() {
+  xpCtx.clearRect(0, 0, xpCanvas.width, xpCanvas.height);
+  xpParticles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < -10) p.x = xpCanvas.width + 10;
+    if (p.x > xpCanvas.width + 10) p.x = -10;
+    const fade = Math.max(0, Math.min(1, p.y / (xpCanvas.height * 0.9)));
+    xpCtx.globalAlpha = p.alpha * fade;
+    xpCtx.fillStyle = '#5b8731';
+    xpCtx.fillRect(p.x, p.y, p.size, p.size);
+    if (p.y < -10) {
+      Object.assign(p, createXpParticle());
+      p.y = xpCanvas.height + Math.random() * 80;
+    }
+  });
+  xpCtx.globalAlpha = 1;
+  requestAnimationFrame(animateXpParticles);
+}
+requestAnimationFrame(animateXpParticles);
+
+document.querySelectorAll('.study-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    const dustCount = 3 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < dustCount; i++) {
+      const dust = document.createElement('span');
+      dust.className = 'dust-particle';
+      const x = 16 + Math.random() * 40;
+      const y = 16 + Math.random() * 16;
+      const dx = (Math.random() - 0.5) * 24;
+      const dy = -8 - Math.random() * 18;
+      dust.style.left = `${x}px`;
+      dust.style.top = `${y}px`;
+      dust.style.setProperty('--dx', `${dx}px`);
+      dust.style.setProperty('--dy', `${dy}px`);
+      card.appendChild(dust);
+      setTimeout(() => dust.remove(), 360);
+    }
+  });
+});
+
+const heroTitle = document.querySelector('.hero h1');
+if (heroTitle) {
+  const heroText = heroTitle.textContent.trim();
+  const textSpan = document.createElement('span');
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+  cursor.textContent = '█';
+  heroTitle.textContent = '';
+  heroTitle.appendChild(textSpan);
+  heroTitle.appendChild(cursor);
+  let charIndex = 0;
+  const typeNext = () => {
+    if (charIndex < heroText.length) {
+      textSpan.textContent = heroText.slice(0, charIndex + 1);
+      charIndex += 1;
+      setTimeout(typeNext, 60);
+    } else {
+      let blinkCount = 0;
+      const blinkTimer = setInterval(() => {
+        cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+        blinkCount += 1;
+        if (blinkCount >= 6) {
+          clearInterval(blinkTimer);
+          cursor.remove();
+        }
+      }, 200);
+    }
+  };
+  typeNext();
+}
+
+const revealTargets = document.querySelectorAll('section');
+revealTargets.forEach(section => section.classList.add('reveal-section'));
+const statCards = document.querySelectorAll('.stat');
+statCards.forEach((stat, index) => {
+  stat.classList.add('reveal-section');
+  stat.style.transitionDelay = `${index * 70}ms`;
+});
+
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('reveal-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+revealTargets.forEach(target => revealObserver.observe(target));
+statCards.forEach(target => revealObserver.observe(target));
+
+sendBtn.addEventListener('click', () => {
+  document.body.classList.add('screen-shake');
+  setTimeout(() => document.body.classList.remove('screen-shake'), 140);
+});
+
+function showAchievementToast() {
+  const toast = document.createElement('div');
+  toast.className = 'achievement-toast';
+  toast.textContent = 'Achievement Unlocked! 📜 Study Design Explorer';
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => toast.classList.add('hide'), 4000);
+  setTimeout(() => toast.remove(), 4400);
+}
+
+const achievementKey = 'achievement_unlocked_proto';
+function handleAchievementScroll() {
+  if (sessionStorage.getItem(achievementKey)) return;
+  const progress = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+  if (progress >= 0.5) {
+    sessionStorage.setItem(achievementKey, '1');
+    showAchievementToast();
+  }
+}
+window.addEventListener('scroll', handleAchievementScroll, { passive: true });
+handleAchievementScroll();
+
+const blockParticles = [];
+let blockAnimationId = null;
+let blockLastTime = 0;
+
+function animateBlockParticles(timestamp) {
+  if (!blockLastTime) blockLastTime = timestamp;
+  const dt = timestamp - blockLastTime;
+  blockLastTime = timestamp;
+  for (let i = blockParticles.length - 1; i >= 0; i--) {
+    const p = blockParticles[i];
+    p.vy += 0.003 * dt;
+    p.ox += p.vx * dt;
+    p.oy += p.vy * dt;
+    p.age += dt;
+    const lifeRatio = Math.max(0, 1 - p.age / p.life);
+    p.el.style.transform = `translate(${p.ox}px, ${p.oy}px)`;
+    p.el.style.opacity = lifeRatio.toFixed(2);
+    if (p.age >= p.life) {
+      p.el.remove();
+      blockParticles.splice(i, 1);
+    }
+  }
+  if (blockParticles.length) {
+    blockAnimationId = requestAnimationFrame(animateBlockParticles);
+  } else {
+    blockAnimationId = null;
+    blockLastTime = 0;
+  }
+}
+
+function spawnBlockBurst(x, y) {
+  const colors = ['#5b8731', '#8b6914'];
+  const count = 5 + Math.floor(Math.random() * 2);
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('span');
+    particle.className = 'pixel-particle';
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+    blockLayer.appendChild(particle);
+    blockParticles.push({
+      el: particle,
+      ox: 0,
+      oy: 0,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: -0.35 - Math.random() * 0.25,
+      age: 0,
+      life: 400
+    });
+  }
+  if (!blockAnimationId) blockAnimationId = requestAnimationFrame(animateBlockParticles);
+}
+
+document.querySelectorAll('.cta-row a, .price-card button, .option-btn').forEach(btn => {
+  btn.addEventListener('click', event => {
+    spawnBlockBurst(event.clientX, event.clientY);
+  });
+});
+
+const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let konamiIndex = 0;
+let rainActive = false;
+
+function startGemRain() {
+  if (rainActive) return;
+  rainActive = true;
+  const rainParticles = [];
+  let lastTime = 0;
+  const startTime = performance.now();
+  const colors = ['#5b8731', '#6bd1ff'];
+
+  function spawnRain(count) {
+    for (let i = 0; i < count; i++) {
+      const gem = document.createElement('span');
+      gem.className = 'pixel-particle';
+      gem.style.background = colors[Math.floor(Math.random() * colors.length)];
+      const x = Math.random() * window.innerWidth;
+      gem.style.left = `${x}px`;
+      gem.style.top = `-10px`;
+      blockLayer.appendChild(gem);
+      rainParticles.push({
+        el: gem,
+        y: 0,
+        vy: 0.12 + Math.random() * 0.15
+      });
+    }
+  }
+
+  function animateRain(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const dt = timestamp - lastTime;
+    lastTime = timestamp;
+    const elapsed = timestamp - startTime;
+    if (elapsed < 3000) spawnRain(4);
+    for (let i = rainParticles.length - 1; i >= 0; i--) {
+      const p = rainParticles[i];
+      p.vy += 0.0006 * dt;
+      p.y += p.vy * dt;
+      p.el.style.transform = `translateY(${p.y}px)`;
+      if (p.y > window.innerHeight + 20) {
+        p.el.remove();
+        rainParticles.splice(i, 1);
+      }
+    }
+    if (elapsed < 3000 || rainParticles.length) {
+      requestAnimationFrame(animateRain);
+    } else {
+      rainActive = false;
+    }
+  }
+
+  requestAnimationFrame(animateRain);
+}
+
+window.addEventListener('keydown', event => {
+  const key = event.key;
+  const expected = konami[konamiIndex];
+  const normalized = key.length === 1 ? key.toLowerCase() : key;
+  const expectedNormalized = expected.length === 1 ? expected.toLowerCase() : expected;
+  if (normalized === expectedNormalized) {
+    konamiIndex += 1;
+    if (konamiIndex === konami.length) {
+      startGemRain();
+      konamiIndex = 0;
+    }
+  } else {
+    konamiIndex = normalized === konami[0].toLowerCase() ? 1 : 0;
+  }
+});
 </script>
 </body>
 </html>
