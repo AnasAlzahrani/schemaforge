@@ -232,7 +232,7 @@ function restoreSession() {
       <button onclick="exportConsult()">📄 Export (.md)</button>
       <button onclick="window.print()">🖨️ Print / PDF</button>
     </div>`;
-    result.innerHTML = actions + '<div class="md-content">' + renderMarkdown(firstAssistant.content) + '</div>';
+    result.innerHTML = actions + '<div class="md-content">' + renderSafeMarkdown(firstAssistant.content) + '</div>';
     result.style.display = 'block';
     
     showFollowupBox();
@@ -244,8 +244,9 @@ function restoreSession() {
       const m = followups[i];
       const div = document.createElement('div');
       div.className = 'chat-msg ' + (m.role === 'user' ? 'user' : 'assistant');
+      const safeContent = renderSafeMarkdown(m.content);
       div.innerHTML = `<div class="msg-label">${m.role === 'user' ? 'You' : 'SchemaForge'}</div>` +
-        (m.role === 'assistant' ? '<div class="md-content">' + renderMarkdown(m.content) + '</div>' : m.content);
+        `<div class="md-content">${safeContent}</div>`;
       history.appendChild(div);
     }
     
@@ -301,7 +302,63 @@ function copyResult(btn) {
   }
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sanitizeHtml(html) {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+  const allowedTags = new Set([
+    'p','strong','em','ul','ol','li','h1','h2','h3','h4','h5','h6',
+    'code','pre','blockquote','table','thead','tbody','tr','th','td','a','br'
+  ]);
+
+  const nodes = [];
+  const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT);
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    const tag = node.tagName.toLowerCase();
+    if (!allowedTags.has(tag)) {
+      const parent = node.parentNode;
+      while (node.firstChild) parent.insertBefore(node.firstChild, node);
+      parent.removeChild(node);
+      return;
+    }
+
+    const allowedAttrs = tag === 'a' ? ['href', 'title', 'target', 'rel'] : [];
+    [...node.attributes].forEach(attr => {
+      if (!allowedAttrs.includes(attr.name.toLowerCase())) {
+        node.removeAttribute(attr.name);
+      }
+    });
+
+    if (tag === 'a') {
+      const href = node.getAttribute('href');
+      if (href) {
+        const safe = href.trim();
+        const ok = safe.startsWith('http://') || safe.startsWith('https://') ||
+          safe.startsWith('mailto:') || safe.startsWith('/') || safe.startsWith('#');
+        if (!ok) node.removeAttribute('href');
+      }
+      const rel = node.getAttribute('rel');
+      if (!rel || !rel.toLowerCase().includes('noopener')) {
+        node.setAttribute('rel', 'noopener');
+      }
+    }
+  });
+
+  return template.innerHTML;
+}
+
 function renderMarkdown(md) {
+  md = escapeHtml(md);
   // Process tables first (before line-level transforms)
   md = md.replace(/(?:^|\n)((?:\|.+\|\n)+)/g, (match, tableBlock) => {
     const rows = tableBlock.trim().split('\n').filter(r => r.trim());
@@ -340,6 +397,10 @@ function renderMarkdown(md) {
     .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
     .replace(/\n\n/g, '</p><p>')
     .replace(/\n/g, '<br>');
+}
+
+function renderSafeMarkdown(md) {
+  return sanitizeHtml(renderMarkdown(md));
 }
 
 async function runConsult() {
@@ -459,7 +520,7 @@ Provide a complete study design consultation.`;
           if (text) {
             fullText += text;
             window._lastConsultRaw = fullText;
-            contentEl.innerHTML = renderMarkdown(fullText) + '<span class="stream-cursor"></span>';
+            contentEl.innerHTML = renderSafeMarkdown(fullText) + '<span class="stream-cursor"></span>';
             result.scrollTop = result.scrollHeight;
           }
         } catch (e) { /* skip unparseable chunks */ }
@@ -467,7 +528,7 @@ Provide a complete study design consultation.`;
     }
 
     // Final render without cursor
-    contentEl.innerHTML = renderMarkdown(fullText);
+    contentEl.innerHTML = renderSafeMarkdown(fullText);
     
     // Store conversation for follow-ups
     window._chatMessages = [
@@ -490,7 +551,7 @@ Provide a complete study design consultation.`;
 
   } catch (e) {
     loading.style.display = 'none';
-    result.innerHTML = `<span style="color:var(--red)">Error: ${e.message}. Please try again.</span>`;
+    result.innerHTML = `<span style="color:var(--red)">Error: ${escapeHtml(e.message)}. Please try again.</span>`;
     result.style.display = 'block';
   } finally {
     btn.disabled = false;
@@ -537,7 +598,7 @@ async function askFollowup(text) {
   // Show user message
   const userDiv = document.createElement('div');
   userDiv.className = 'chat-msg user';
-  userDiv.innerHTML = `<div class="msg-label">You</div>${question}`;
+  userDiv.innerHTML = `<div class="msg-label">You</div><div class="md-content">${renderSafeMarkdown(question)}</div>`;
   history.appendChild(userDiv);
   
   // Add to conversation
@@ -584,14 +645,14 @@ async function askFollowup(text) {
           const t = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
           if (t) {
             fullText += t;
-            contentEl.innerHTML = renderMarkdown(fullText) + '<span class="stream-cursor"></span>';
+            contentEl.innerHTML = renderSafeMarkdown(fullText) + '<span class="stream-cursor"></span>';
             history.scrollIntoView({ behavior: 'smooth', block: 'end' });
           }
         } catch (e) {}
       }
     }
 
-    contentEl.innerHTML = renderMarkdown(fullText);
+    contentEl.innerHTML = renderSafeMarkdown(fullText);
     window._chatMessages.push({ role: 'assistant', content: fullText });
     
     // Keep conversation manageable (last 10 exchanges + system)
@@ -602,9 +663,30 @@ async function askFollowup(text) {
     
     // Persist session
     saveSession();
+    
+    // Show email capture after 2nd AI response (user got real value)
+    const aiMsgCount = window._chatMessages.filter(m => m.role === 'assistant').length;
+    if (aiMsgCount === 2 && !localStorage.getItem('sf_email_captured')) {
+      setTimeout(() => {
+        const cta = document.createElement('div');
+        cta.id = 'emailCta';
+        cta.innerHTML = `
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:1.5rem 0;text-align:center">
+            <p style="margin-bottom:.75rem;font-size:.95rem">📬 Want methodology tips & early access to new features?</p>
+            <div style="display:flex;gap:.5rem;max-width:360px;margin:0 auto">
+              <input type="email" id="ctaEmail" placeholder="your@email.com" style="flex:1;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem">
+              <button onclick="captureCtaEmail()" style="padding:.6rem 1rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">Subscribe</button>
+            </div>
+            <p style="font-size:.75rem;color:var(--dim);margin-top:.5rem">No spam. Unsubscribe anytime.</p>
+          </div>`;
+        const historyEl = document.getElementById('chatHistory');
+        if (historyEl) historyEl.appendChild(cta);
+        cta.scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
+    }
 
   } catch (e) {
-    contentEl.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+    contentEl.innerHTML = `<span style="color:var(--red)">Error: ${escapeHtml(e.message)}</span>`;
   } finally {
     btn.disabled = false;
     input.focus();
