@@ -1,85 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consultation History — ProtoCol</title>
 <meta name="description" content="Review your past study design consultations. All data stays in your browser.">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://schemaforge-seven.vercel.app/history">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e2d3d;--text:#e2e8f0;--dim:#64748b;--accent:#06b6d4;--accent2:#0e7490;--green:#10b981;--red:#ef4444;--font:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif}
-body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-a{color:var(--accent);text-decoration:none}
-.container{max-width:900px;margin:0 auto;padding:0 1.5rem;width:100%}
-nav{border-bottom:1px solid var(--border);padding:1rem 0}
+:root{
+  --bg:#2c2f33;
+  --surface:#3a3d41;
+  --surface-2:#32353a;
+  --border:#1a1c1e;
+  --text:#e8e6e3;
+  --muted:#b7b3aa;
+  --accent:#5b8731;
+  --accent-2:#8b6914;
+  --red:#f87171;
+  --heading-font:'Press Start 2P',monospace;
+  --body-font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --max-width:900px;
+  --pixel-mid:#4a4d52;
+  --pixel-edge:#1a1c1e;
+  --grid:rgba(0,0,0,0.22);
+  --pixel-frame:0 0 0 2px var(--pixel-mid),0 0 0 4px var(--pixel-edge);
+  --pixel-press:4px 4px 0 0 var(--pixel-edge);
+  --pixel-press-hover:2px 2px 0 0 var(--pixel-edge);
+}
+body{background-color:var(--bg);color:var(--text);font-family:var(--body-font);line-height:1.6;min-height:100vh;display:flex;flex-direction:column;background-image:repeating-linear-gradient(0deg,var(--grid) 0 1px,transparent 1px 16px),repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 16px);background-size:16px 16px}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 1.5rem;width:100%}
+nav{padding:1rem 0;background:var(--surface);position:sticky;top:0;z-index:10;box-shadow:var(--pixel-frame)}
 nav .container{display:flex;justify-content:space-between;align-items:center}
-.brand{font-weight:700;font-size:1.1rem;color:var(--text)}
-.brand span{color:var(--accent)}
-nav a.back{color:var(--dim);font-size:.9rem}
-.hero{padding:2.5rem 0 1.5rem;text-align:center}
-.hero h1{font-size:1.6rem;margin-bottom:.4rem}
-.hero p{color:var(--dim);font-size:.95rem}
+.brand{font-weight:700;font-size:.95rem;font-family:var(--heading-font);display:flex;align-items:center;gap:.5rem;letter-spacing:.04em}
+.nav-logo{height:24px;width:auto;image-rendering:pixelated;vertical-align:middle}
+nav a.back{color:var(--muted);font-size:.85rem;text-decoration:none;font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em}
+nav a.back:hover{color:var(--accent)}
+.hero{padding:2.5rem 0 1.5rem}
+.hero h1{font-family:var(--heading-font);font-size:1.15rem;margin-bottom:.5rem;line-height:1.5}
+.hero p{color:var(--muted);font-size:.95rem}
 .main{flex:1;padding:0 0 3rem}
-.empty{text-align:center;padding:4rem 2rem;color:var(--dim)}
-.empty p{margin:.5rem 0}
+.privacy{text-align:center;padding:.75rem;font-size:.75rem;color:var(--muted);background:var(--surface);box-shadow:var(--pixel-frame);margin-bottom:1.5rem;font-family:var(--heading-font);letter-spacing:.02em}
+.empty{text-align:center;padding:4rem 2rem;color:var(--muted)}
 .empty .icon{font-size:2.5rem;margin-bottom:1rem}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;cursor:pointer;transition:border-color .2s}
-.card:hover{border-color:var(--accent2)}
+.empty p{margin:.5rem 0}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.toolbar .count{font-size:.7rem;color:var(--muted);font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em}
+.toolbar button{background:var(--surface-2);border:0;color:var(--muted);padding:.45rem .85rem;font-size:.7rem;cursor:pointer;font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em;box-shadow:var(--pixel-frame),var(--pixel-press)}
+.toolbar button:hover{transform:translate(2px,2px);box-shadow:var(--pixel-frame),var(--pixel-press-hover);color:var(--red)}
+.card{background:var(--surface);box-shadow:var(--pixel-frame);padding:1.25rem;margin-bottom:1rem;cursor:pointer;transition:background .15s}
+.card:hover{background:var(--surface-2)}
 .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
 .card-aim{font-size:.95rem;font-weight:500;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card-meta{display:flex;gap:.75rem;margin-top:.5rem;font-size:.8rem;color:var(--dim)}
-.card-tag{display:inline-block;background:rgba(6,182,212,.1);border:1px solid var(--accent2);border-radius:4px;padding:1px 8px;font-size:.75rem;color:var(--accent);white-space:nowrap}
-.card-date{white-space:nowrap}
+.card-meta{display:flex;gap:.75rem;margin-top:.5rem;font-size:.75rem;color:var(--muted);align-items:center}
+.card-tag{display:inline-block;background:rgba(91,135,49,.15);border:2px solid var(--accent);padding:1px 8px;font-size:.65rem;color:var(--accent);font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em}
+.card-date{font-size:.75rem}
 .card-actions{display:flex;gap:.5rem;margin-top:.75rem}
-.card-actions button{background:var(--surface2);border:1px solid var(--border);color:var(--dim);padding:.35rem .75rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
-.card-actions button:hover{border-color:var(--accent);color:var(--accent)}
-.card-actions button.danger:hover{border-color:var(--red);color:var(--red)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
-.toolbar .count{font-size:.9rem;color:var(--dim)}
-.toolbar button{background:transparent;border:1px solid var(--border);color:var(--dim);padding:.4rem .8rem;border-radius:6px;font-size:.85rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
-.toolbar button:hover{border-color:var(--red);color:var(--red)}
-/* Expanded view */
-.card-expanded{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.9rem;line-height:1.7;max-height:500px;overflow-y:auto}
-.card-expanded h2{color:var(--accent);font-size:1rem;margin:1.25rem 0 .4rem;padding-bottom:.2rem;border-bottom:1px solid var(--border)}
+.card-actions button{background:var(--surface-2);border:0;color:var(--muted);padding:.35rem .75rem;font-size:.65rem;cursor:pointer;font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em;box-shadow:var(--pixel-frame),var(--pixel-press)}
+.card-actions button:hover{transform:translate(2px,2px);box-shadow:var(--pixel-frame),var(--pixel-press-hover);color:var(--accent)}
+.card-actions button.danger:hover{color:var(--red)}
+.card-expanded{display:none;margin-top:1rem;padding-top:1rem;border-top:2px solid var(--pixel-edge);font-size:.9rem;line-height:1.7;max-height:500px;overflow-y:auto}
+.card-expanded h2{color:var(--accent);font-size:1rem;margin:1.25rem 0 .4rem;padding-bottom:.2rem;border-bottom:2px solid var(--pixel-edge);font-family:var(--body-font)}
 .card-expanded h2:first-child{margin-top:0}
 .card-expanded h3{color:var(--accent);font-size:.9rem;margin:.75rem 0 .3rem}
 .card-expanded ul{margin:.4rem 0;padding-left:1.25rem}
 .card-expanded li{margin:.2rem 0}
 .card-expanded strong{color:var(--text)}
-.card-expanded code{background:rgba(6,182,212,.1);padding:1px 5px;border-radius:3px;font-size:.88em}
+.card-expanded code{background:var(--surface-2);padding:1px 5px;font-size:.88em}
 .card-expanded p{margin:.4rem 0}
 .md-table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.85rem}
-.md-table th,.md-table td{border:1px solid var(--border);padding:.4rem .6rem;text-align:left}
-.md-table th{background:var(--surface2);color:var(--accent);font-weight:600;font-size:.8rem}
-.md-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
-blockquote{border-left:3px solid var(--accent2);padding:.4rem .8rem;margin:.4rem 0;color:var(--dim);background:rgba(6,182,212,.03);border-radius:0 6px 6px 0}
-footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;color:var(--dim);font-size:.85rem}
-.privacy{text-align:center;padding:.75rem;font-size:.8rem;color:var(--dim);background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:1.5rem}
-@media(max-width:600px){.hero h1{font-size:1.3rem}.card{padding:1rem}.toolbar{flex-direction:column;gap:.5rem;align-items:flex-start}}
+.md-table th,.md-table td{border:2px solid var(--pixel-edge);padding:.4rem .6rem;text-align:left}
+.md-table th{background:var(--surface-2);color:var(--accent);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.02em}
+blockquote{border-left:4px solid var(--accent);padding:.5rem 1rem;margin:.5rem 0;color:var(--muted);background:var(--surface-2)}
+footer{border-top:2px solid var(--pixel-edge);padding:1.5rem 0;text-align:left;color:var(--muted);font-size:.75rem;background:var(--surface);font-family:var(--heading-font)}
+footer .container{font-family:var(--heading-font)}
+footer a{font-family:var(--body-font)}
+@media(max-width:600px){.hero h1{font-size:.95rem}.card{padding:1rem}.toolbar{flex-direction:column;gap:.5rem;align-items:flex-start}}
+@media print{body{background:#fff;color:#000}nav,.toolbar,.privacy,.card-actions,footer{display:none!important}.card{border:1px solid #ccc;break-inside:avoid;background:#fff;box-shadow:none}.card-expanded{display:block!important;max-height:none;border-top:1px solid #ccc}.card-expanded h2{color:#333;border-bottom:1px solid #ccc}.card-expanded h3{color:#555}.card-expanded code{background:#eee;color:#333}.md-table th,.md-table td{border:1px solid #999}.md-table th{background:#f0f0f0;color:#333}blockquote{border-left:3px solid #999;color:#555;background:#fafafa}}
 </style>
 </head>
 <body>
-<nav><div class="container"><div class="brand">📄 ProtoCol</div><a href="/" class="back">← Home</a></div></nav>
+<nav>
+  <div class="container">
+    <div class="brand"><img class="nav-logo" src="/assets/logo-protocol.png" alt="ProtoCol logo">ProtoCol</div>
+    <div style="display:flex;gap:1rem;align-items:center">
+      <a href="/consult" style="color:var(--muted);font-size:.9rem;text-decoration:none">New Consultation</a>
+      <a href="/" class="back">← Home</a>
+    </div>
+  </div>
+</nav>
 
 <div class="container">
-<div class="hero">
-<h1>📋 Consultation History</h1>
-<p>Your past study design consultations, stored locally in your browser.</p>
-</div>
+  <div class="hero">
+    <h1>Consultation History</h1>
+    <p>Your past study design consultations, stored locally in your browser.</p>
+  </div>
 
-<div class="main">
-<div class="privacy">🔒 All data stays on your device — nothing is sent to our servers.</div>
-<div id="content"></div>
-</div>
+  <div class="main">
+    <div class="privacy">🔒 All data stays on your device</div>
+    <div id="content"></div>
+  </div>
 </div>
 
 <footer>
-<div class="container">ProtoCol by <a href="https://coef.health">Coefficients</a> · <a href="/consult">New consultation →</a></div>
+  <div class="container">Published by <a href="https://coef.health">Coefficients Health Analytics</a>. <a href="/consult">New consultation →</a></div>
 </footer>
 
 <script>
+function escapeHtml(value) {
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 function renderMarkdown(md) {
+  md = escapeHtml(md);
   md = md.replace(/(?:^|\n)((?:\|.+\|\n)+)/g, (match, tableBlock) => {
     const rows = tableBlock.trim().split('\n').filter(r => r.trim());
     if (rows.length < 2) return match;
@@ -100,7 +141,7 @@ function renderMarkdown(md) {
     html += '</tbody></table>';
     return '\n' + html + '\n';
   });
-  md = md.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+  md = md.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
   md = md.replace(/<\/blockquote>\n<blockquote>/g, '<br>');
   return md
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
@@ -117,24 +158,26 @@ function renderMarkdown(md) {
 
 function formatDate(iso) {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) +
-    ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) +
+    ' · ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
 }
 
 function typeLabel(t) {
-  const map = { rct: 'RCT', cohort: 'Cohort', 'case-control': 'Case-Control', claims: 'Claims/EHR', registry: 'Registry', unsure: 'Unspecified' };
+  const map = { rct:'RCT', cohort:'Cohort', 'case-control':'Case-Control', claims:'Claims/EHR', registry:'Registry', unsure:'Unspecified' };
   return map[t] || t || 'Unspecified';
 }
 
-function exportOne(item) {
+function exportOne(idx) {
+  const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
+  const item = history[idx];
+  if (!item) return;
   let md = '# ProtoCol Study Design Consultation\n';
   md += `_Generated ${formatDate(item.date)}_\n\n`;
   md += `**Research Aim:** ${item.aim}\n`;
   if (item.type && item.type !== 'unsure') md += `**Study Type:** ${typeLabel(item.type)}\n`;
   if (item.context) md += `**Context:** ${item.context}\n`;
   md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [ProtoCol](https://schemaforge-seven.vercel.app) · Coefficients_\n';
-  
-  const blob = new Blob([md], { type: 'text/markdown' });
+  const blob = new Blob([md], { type:'text/markdown' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -144,7 +187,7 @@ function exportOne(item) {
 }
 
 function deleteOne(idx) {
-  if (!confirm('Delete this consultation? This cannot be undone.')) return;
+  if (!confirm('Delete this consultation?')) return;
   const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
   history.splice(idx, 1);
   localStorage.setItem('sf_history', JSON.stringify(history));
@@ -152,7 +195,7 @@ function deleteOne(idx) {
 }
 
 function clearAll() {
-  if (!confirm('Delete ALL consultation history? This cannot be undone.')) return;
+  if (!confirm('Delete ALL consultation history?')) return;
   localStorage.removeItem('sf_history');
   render();
 }
@@ -165,65 +208,29 @@ function toggleExpand(idx) {
 function render() {
   const container = document.getElementById('content');
   const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
-  
   if (!history.length) {
-    container.innerHTML = `
-      <div class="empty">
-        <div class="icon">📝</div>
-        <p>No consultations yet.</p>
-        <p><a href="/consult">Start your first consultation →</a></p>
-      </div>`;
+    container.innerHTML = '<div class="empty"><div class="icon">📝</div><p>No consultations yet.</p><p><a href="/consult">Start your first consultation →</a></p></div>';
     return;
   }
-  
-  let html = `<div class="toolbar">
-    <span class="count">${history.length} consultation${history.length > 1 ? 's' : ''}</span>
-    <button onclick="clearAll()">🗑 Clear All</button>
-  </div>`;
-  
+  let html = `<div class="toolbar"><span class="count">${history.length} consultation${history.length > 1 ? 's' : ''}</span><button onclick="clearAll()">Clear All</button></div>`;
   for (let i = 0; i < history.length; i++) {
     const item = history[i];
-    const preview = item.aim.length > 150 ? item.aim.slice(0, 150) + '…' : item.aim;
+    const preview = escapeHtml(item.aim.length > 150 ? item.aim.slice(0, 150) + '…' : item.aim);
     html += `
       <div class="card" onclick="toggleExpand(${i})">
-        <div class="card-header">
-          <div class="card-aim">${preview}</div>
-        </div>
+        <div class="card-header"><div class="card-aim">${preview}</div></div>
         <div class="card-meta">
           <span class="card-date">${formatDate(item.date)}</span>
           <span class="card-tag">${typeLabel(item.type)}</span>
         </div>
         <div class="card-actions">
-          <button onclick="event.stopPropagation();exportOne(${i})">📄 Export</button>
-          <button class="danger" onclick="event.stopPropagation();deleteOne(${i})">🗑 Delete</button>
+          <button onclick="event.stopPropagation();exportOne(${i})">Export .md</button>
+          <button class="danger" onclick="event.stopPropagation();deleteOne(${i})">Delete</button>
         </div>
         <div class="card-expanded" id="expanded-${i}">${renderMarkdown(item.result || '')}</div>
       </div>`;
   }
-  
   container.innerHTML = html;
-}
-
-// Fix export serialization
-function exportOne(item) {
-  if (typeof item === 'number') {
-    const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
-    item = history[item];
-  }
-  let md = '# ProtoCol Study Design Consultation\n';
-  md += `_Generated ${formatDate(item.date)}_\n\n`;
-  md += `**Research Aim:** ${item.aim}\n`;
-  if (item.type && item.type !== 'unsure') md += `**Study Type:** ${typeLabel(item.type)}\n`;
-  if (item.context) md += `**Context:** ${item.context}\n`;
-  md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [ProtoCol](https://schemaforge-seven.vercel.app) · Coefficients_\n';
-  
-  const blob = new Blob([md], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `protocol-${new Date(item.date).toISOString().slice(0,10)}.md`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 render();

@@ -18,6 +18,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#5b8731">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -599,7 +601,7 @@ Provide a complete study design consultation.`;
 
   } catch (e) {
     loading.style.display = 'none';
-    result.innerHTML = `<span style="color:var(--red)">Error: ${escapeHtml(e.message)}. Please try again.</span>`;
+    result.innerHTML = `<div style="text-align:center;padding:1rem"><p style="color:var(--red);margin-bottom:1rem">Error: ${escapeHtml(e.message)}</p><button class="btn" style="width:auto;padding:.6rem 1.5rem" onclick="runConsult()">Retry →</button></div>`;
     result.style.display = 'block';
   } finally {
     btn.disabled = false;
@@ -719,13 +721,13 @@ async function askFollowup(text) {
         const cta = document.createElement('div');
         cta.id = 'emailCta';
         cta.innerHTML = `
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin:1.5rem 0;text-align:center">
-            <p style="margin-bottom:.75rem;font-size:.95rem">Want methodology tips & early access to new features?</p>
-            <div style="display:flex;gap:.5rem;max-width:360px;margin:0 auto;flex-wrap:wrap">
-              <input type="email" id="ctaEmail" placeholder="your@email.com" style="flex:1;min-width:200px;padding:.6rem .8rem;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem">
-              <button onclick="captureCtaEmail()" style="padding:.6rem 1rem;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">Subscribe</button>
+          <div style="background:var(--surface);box-shadow:var(--pixel-frame);padding:1.25rem;margin:1.5rem 0;text-align:center">
+            <p style="margin-bottom:.75rem;font-size:.8rem;font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Methodology tips & early access</p>
+            <div style="display:flex;gap:.5rem;max-width:400px;margin:0 auto;flex-wrap:wrap">
+              <input type="email" id="ctaEmail" placeholder="your@email.com" style="flex:1;min-width:200px;padding:.65rem .85rem;border:2px solid var(--pixel-edge);background:var(--surface-2);color:var(--text);font-family:var(--body-font);font-size:.9rem;outline:none">
+              <button onclick="captureCtaEmail()" style="padding:.6rem 1rem;border:0;background:var(--accent);color:#0d120d;cursor:pointer;font-size:.7rem;font-weight:700;font-family:var(--heading-font);text-transform:uppercase;letter-spacing:.04em;box-shadow:var(--pixel-frame),var(--pixel-press);white-space:nowrap">Subscribe</button>
             </div>
-            <p style="font-size:.75rem;color:var(--muted);margin-top:.5rem">No spam. Unsubscribe anytime.</p>
+            <p style="font-size:.7rem;color:var(--muted);margin-top:.5rem">No spam. Unsubscribe anytime.</p>
           </div>`;
         const historyEl = document.getElementById('chatHistory');
         if (historyEl) historyEl.appendChild(cta);
