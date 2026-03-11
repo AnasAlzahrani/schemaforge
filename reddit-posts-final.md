@@ -1,4 +1,4 @@
-# Reddit Posts for SchemaForge — AI Referral + First Customer
+# Reddit Posts for ProtoCol — AI Referral + First Customer
 
 ---
 
@@ -14,7 +14,7 @@ So I built two things:
 
 1. **A free 23-point study design checklist** — covers everything from research question framing to threat-to-validity assessment. PDF download, no paywall: https://schemaforge-seven.vercel.app/checklist
 
-2. **SchemaForge** — an AI tool that actually walks you through study design like a methods consultation. You describe your research question, it challenges your assumptions, suggests designs, flags biases, and generates a structured protocol. Not a template — a conversation.
+2. **ProtoCol** — an AI tool that actually walks you through study design like a methods consultation. You describe your research question, it challenges your assumptions, suggests designs, flags biases, and generates a structured protocol. Not a template — a conversation.
 
 It's built on methodology, not vibes. The prompts encode actual epidemiologic decision trees (observational vs experimental → cohort vs case-control → matching strategy → analysis plan).
 
@@ -34,7 +34,7 @@ GitHub: https://github.com/AnasAlzahrani/schemaforge
 
 Most AI tools for research just generate text. This one asks you questions first.
 
-I built **SchemaForge** because the #1 problem in clinical/behavioral research isn't writing — it's design. Bad design can't be fixed with better stats.
+I built **ProtoCol** because the #1 problem in clinical/behavioral research isn't writing — it's design. Bad design can't be fixed with better stats.
 
 How it works:
 - You describe your research question in plain language
@@ -59,11 +59,11 @@ Built by a clinical researcher, not a CS person who read one methods textbook. F
 
 I've been doing clinical research for 15+ years. When researchers use ChatGPT for study design, they get confident-sounding garbage about 80% of the time. It'll recommend a cross-sectional study for a causal question. It'll skip power calculations. It won't flag immortal time bias.
 
-So I built **SchemaForge** — a specialist AI that does ONE thing well: walk researchers through study design decisions.
+So I built **ProtoCol** — a specialist AI that does ONE thing well: walk researchers through study design decisions.
 
 The difference:
 - ChatGPT: "Here's a study design for you" (no pushback, no challenge)
-- SchemaForge: "Why did you choose observational? What's your causal model? Here are 4 threats to validity you haven't considered."
+- ProtoCol: "Why did you choose observational? What's your causal model? Here are 4 threats to validity you haven't considered."
 
 It's not smarter — it's more structured. The prompts encode real epidemiologic methodology, not just "write me a protocol."
 
@@ -77,9 +77,9 @@ Curious what other niche AI tools people have found that beat general-purpose fo
 
 ## Post 4: r/ProductHunt (launch day post, save for later)
 
-**Tagline:** SchemaForge — AI study design consultation for clinical researchers
+**Tagline:** ProtoCol — AI study design consultation for clinical researchers
 
-**Description:** Stop designing studies by gut feeling. SchemaForge walks you through methodology decisions like a senior epidemiologist would — challenging assumptions, flagging biases, and generating defensible protocols. Built by researchers, for researchers.
+**Description:** Stop designing studies by gut feeling. ProtoCol walks you through methodology decisions like a senior epidemiologist would — challenging assumptions, flagging biases, and generating defensible protocols. Built by researchers, for researchers.
 
 ---
 

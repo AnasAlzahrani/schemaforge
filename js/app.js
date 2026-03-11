@@ -1,5 +1,5 @@
 /* ============================================================
-   SchemaForge — Core Generator Engine
+   ProtoCol — Core Generator Engine
    Handles all 8 schema types: generation, validation, preview
    ============================================================ */
 

@@ -9,7 +9,7 @@ Hey everyone,
 
 Not sure if anyone else ran into this recently, but the free schema generator tools have been quietly disappearing. Google deprecated their Structured Data Markup Helper a while back, and SchemaApp recently killed their free tier — you now need to pay or sign up for a trial just to generate basic JSON-LD.
 
-I was tired of hand-writing schema or relying on janky WordPress plugins that bloat page speed, so I built a free tool: **SchemaForge** — [https://schemaforge-seven.vercel.app](https://schemaforge-seven.vercel.app)
+I was tired of hand-writing schema or relying on janky WordPress plugins that bloat page speed, so I built a free tool: **ProtoCol** — [https://schemaforge-seven.vercel.app](https://schemaforge-seven.vercel.app)
 
 It generates valid JSON-LD for 8 schema types:
 - FAQ Page

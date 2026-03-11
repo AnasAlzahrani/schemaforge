@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consultation History — SchemaForge</title>
+<title>Consultation History — ProtoCol</title>
 <meta name="description" content="Review your past study design consultations. All data stays in your browser.">
 <link rel="canonical" href="https://schemaforge-seven.vercel.app/history">
 <style>
@@ -60,7 +60,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 </style>
 </head>
 <body>
-<nav><div class="container"><div class="brand">Schema<span>Forge</span></div><a href="/" class="back">← Home</a></div></nav>
+<nav><div class="container"><div class="brand">📄 ProtoCol</div><a href="/" class="back">← Home</a></div></nav>
 
 <div class="container">
 <div class="hero">
@@ -75,7 +75,7 @@ footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;col
 </div>
 
 <footer>
-<div class="container">SchemaForge by <a href="https://coef.health">Coefficients</a> · <a href="/consult">New consultation →</a></div>
+<div class="container">ProtoCol by <a href="https://coef.health">Coefficients</a> · <a href="/consult">New consultation →</a></div>
 </footer>
 
 <script>
@@ -127,18 +127,18 @@ function typeLabel(t) {
 }
 
 function exportOne(item) {
-  let md = '# SchemaForge Study Design Consultation\n';
+  let md = '# ProtoCol Study Design Consultation\n';
   md += `_Generated ${formatDate(item.date)}_\n\n`;
   md += `**Research Aim:** ${item.aim}\n`;
   if (item.type && item.type !== 'unsure') md += `**Study Type:** ${typeLabel(item.type)}\n`;
   if (item.context) md += `**Context:** ${item.context}\n`;
-  md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [SchemaForge](https://schemaforge-seven.vercel.app) · Coefficients_\n';
+  md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [ProtoCol](https://schemaforge-seven.vercel.app) · Coefficients_\n';
   
   const blob = new Blob([md], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `schemaforge-${new Date(item.date).toISOString().slice(0,10)}.md`;
+  a.download = `protocol-${new Date(item.date).toISOString().slice(0,10)}.md`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -210,18 +210,18 @@ function exportOne(item) {
     const history = JSON.parse(localStorage.getItem('sf_history') || '[]');
     item = history[item];
   }
-  let md = '# SchemaForge Study Design Consultation\n';
+  let md = '# ProtoCol Study Design Consultation\n';
   md += `_Generated ${formatDate(item.date)}_\n\n`;
   md += `**Research Aim:** ${item.aim}\n`;
   if (item.type && item.type !== 'unsure') md += `**Study Type:** ${typeLabel(item.type)}\n`;
   if (item.context) md += `**Context:** ${item.context}\n`;
-  md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [SchemaForge](https://schemaforge-seven.vercel.app) · Coefficients_\n';
+  md += '\n---\n\n' + item.result + '\n\n---\n_Consultation by [ProtoCol](https://schemaforge-seven.vercel.app) · Coefficients_\n';
   
   const blob = new Blob([md], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `schemaforge-${new Date(item.date).toISOString().slice(0,10)}.md`;
+  a.download = `protocol-${new Date(item.date).toISOString().slice(0,10)}.md`;
   a.click();
   URL.revokeObjectURL(url);
 }

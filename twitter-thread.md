@@ -1,4 +1,4 @@
-# Twitter/X Thread — SchemaForge Launch
+# Twitter/X Thread — ProtoCol Launch
 
 ---
 
@@ -12,7 +12,7 @@ So I built my own. It's free, it's fast, and it works. 🧵
 ---
 
 ## Tweet 2 (What it is)
-SchemaForge generates valid JSON-LD structured data for 8 schema types:
+ProtoCol generates valid JSON-LD structured data for 8 schema types:
 
 → FAQ Page
 → Local Business  

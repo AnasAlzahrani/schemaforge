@@ -15,7 +15,7 @@
 
 Hi [Name],
 
-Hope you're well. I've been building a tool called **SchemaForge** that walks researchers through study design — power calculations, causal DAGs, identifying threats to validity, and generating reviewer rebuttals.
+Hope you're well. I've been building a tool called **ProtoCol** that walks researchers through study design — power calculations, causal DAGs, identifying threats to validity, and generating reviewer rebuttals.
 
 Think of it as a methodology consultation in a chat interface. The researcher pastes their study aim and gets an interactive consultation that challenges weak assumptions and produces a defensible design.
 

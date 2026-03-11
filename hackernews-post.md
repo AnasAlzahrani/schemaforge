@@ -1,7 +1,7 @@
 # Hacker News Submission
 
 ## Title
-Show HN: SchemaForge – Free JSON-LD structured data generator (no signup, no backend)
+Show HN: ProtoCol – Free JSON-LD structured data generator (no signup, no backend)
 
 ## URL
 https://schemaforge-seven.vercel.app

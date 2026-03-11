@@ -1,8 +1,8 @@
-# 🏗️ SchemaForge — AI Study Design Architect
+# 🏗️ ProtoCol — AI Study Design Architect
 
-> **Your next study fails if the design is weak. SchemaForge fixes that in 20 minutes.**
+> **Your next study fails if the design is weak. ProtoCol fixes that in 20 minutes.**
 
-SchemaForge is an AI-powered study design consultation tool for clinical researchers, epidemiologists, and biostatisticians. It doesn't generate templates — it walks you through methodology decisions like a senior epidemiologist would.
+ProtoCol is an AI-powered study design consultation tool for clinical researchers, epidemiologists, and biostatisticians. It doesn't generate templates — it walks you through methodology decisions like a senior epidemiologist would.
 
 🔗 **Try it free:** [schemaforge-seven.vercel.app](https://schemaforge-seven.vercel.app)
 
@@ -22,7 +22,7 @@ Paste your research aim. Get a defensible study design with:
 
 General-purpose LLMs give confident-sounding study design advice that's wrong ~80% of the time:
 
-| Problem | ChatGPT | SchemaForge |
+| Problem | ChatGPT | ProtoCol |
 |---------|---------|-------------|
 | Causal question → recommends cross-sectional | ✅ Common | ❌ Catches it |
 | Skips power calculation entirely | ✅ Common | ❌ Always included |
@@ -30,7 +30,7 @@ General-purpose LLMs give confident-sounding study design advice that's wrong ~8
 | No DAG, no causal model | ✅ Common | ❌ Generates DAG |
 | Doesn't challenge assumptions | ✅ Always agrees | ❌ Pushes back |
 
-SchemaForge encodes real epidemiologic methodology — not just "write me a protocol."
+ProtoCol encodes real epidemiologic methodology — not just "write me a protocol."
 
 ## Study Types Supported
 

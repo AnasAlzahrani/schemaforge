@@ -1,7 +1,7 @@
-# Google Search Console Setup — SchemaForge
+# Google Search Console Setup — ProtoCol
 
 ## What This Does
-Gets SchemaForge indexed by Google so it shows up in search results. Takes ~5 minutes.
+Gets ProtoCol indexed by Google so it shows up in search results. Takes ~5 minutes.
 
 ---
 
@@ -26,13 +26,13 @@ The easiest method for Vercel:
    <meta name="google-site-verification" content="XXXXXXXXXXXXX" />
    ```
 2. Copy that entire tag
-3. Add it to the `<head>` section of `index.html` in the SchemaForge repo
+3. Add it to the `<head>` section of `index.html` in the ProtoCol repo
 4. Commit, push, wait for Vercel to deploy (~30 seconds)
 5. Go back to GSC and click **Verify**
 
 **Option B — HTML File Upload**
 1. Google will give you an HTML file (like `google1234567890abcdef.html`)
-2. Download it and add it to the root of the SchemaForge repo
+2. Download it and add it to the root of the ProtoCol repo
 3. Commit, push, wait for deploy
 4. Click **Verify** in GSC
 

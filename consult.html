@@ -3,149 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Design Consultation — SchemaForge</title>
+<title>Study Design Consultation — ProtoCol</title>
 <meta name="description" content="Paste your research aim, get a methodologically defensible study design in minutes. Power calculations, causal DAGs, and reviewer rebuttals.">
-<meta property="og:title" content="Study Design Consultation — SchemaForge">
+<meta property="og:title" content="Study Design Consultation — ProtoCol">
 <meta property="og:description" content="Paste your research aim. Get a defensible study design with power calculations, causal DAGs, and reviewer rebuttals in minutes.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://schemaforge-seven.vercel.app/consult">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Study Design Consultation — SchemaForge">
+<meta name="twitter:title" content="Study Design Consultation — ProtoCol">
 <meta name="twitter:description" content="AI study design methodologist. Paste your aim, get power calcs + DAGs + reviewer rebuttals.">
 <link rel="canonical" href="https://schemaforge-seven.vercel.app/consult">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e2d3d;--text:#e2e8f0;--dim:#64748b;--accent:#06b6d4;--accent2:#0e7490;--green:#10b981;--red:#ef4444;--font:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif}
-body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-a{color:var(--accent);text-decoration:none}
-.container{max-width:800px;margin:0 auto;padding:0 1.5rem;width:100%}
-nav{border-bottom:1px solid var(--border);padding:1rem 0}
+:root{
+  --bg:#fafaf8;
+  --surface:#ffffff;
+  --surface-2:#f4f4ef;
+  --border:#d8d8cf;
+  --text:#1a1a1a;
+  --muted:#5a5a5a;
+  --accent:#0f766e;
+  --red:#b91c1c;
+  --heading-font:Georgia,'Times New Roman',serif;
+  --body-font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --max-width:720px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1a1a2e;
+    --surface:#22223a;
+    --surface-2:#2c2c46;
+    --border:#3a3a58;
+    --text:#f5f4ef;
+    --muted:#c9c8c0;
+    --red:#f87171;
+  }
+}
+body{background:var(--bg);color:var(--text);font-family:var(--body-font);line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 1.5rem;width:100%}
+nav{border-bottom:1px solid var(--border);padding:1rem 0;background:var(--bg);position:sticky;top:0;z-index:10}
 nav .container{display:flex;justify-content:space-between;align-items:center}
-.brand{font-weight:700;font-size:1.1rem;color:var(--text)}
-.brand span{color:var(--accent)}
-nav a.back{color:var(--dim);font-size:.9rem}
-.hero{padding:3rem 0 2rem;text-align:center}
-.hero h1{font-size:1.8rem;margin-bottom:.5rem}
-.hero p{color:var(--dim);max-width:500px;margin:0 auto}
+.brand{font-weight:700;font-size:1.05rem;font-family:var(--heading-font);display:flex;align-items:center;gap:.5rem}
+nav a.back{color:var(--muted);font-size:.9rem;text-decoration:none}
+nav a.back:hover{color:var(--accent)}
+.hero{padding:2.5rem 0 1.5rem}
+.hero h1{font-family:var(--heading-font);font-size:1.7rem;margin-bottom:.5rem}
+.hero p{color:var(--muted);max-width:560px}
 .main{flex:1;padding:0 0 3rem}
-.step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
-.step h2{font-size:1.1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
-.step h2 .num{background:var(--accent2);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;color:var(--text);font-family:var(--font);font-size:.95rem;resize:vertical;min-height:120px;outline:none;transition:border .2s}
-textarea:focus{border-color:var(--accent)}
-textarea::placeholder{color:var(--dim)}
+.section-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem;margin-bottom:1.25rem}
+.step h2{font-family:var(--heading-font);font-size:1.1rem;margin-bottom:.75rem}
+.step .num{font-size:.85rem;color:var(--muted);margin-right:.4rem}
+.label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:.35rem}
+textarea{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.85rem;color:var(--text);font-family:var(--body-font);font-size:.95rem;resize:vertical;min-height:120px;outline:none}
+textarea::placeholder{color:var(--muted)}
 .options{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
-.opt{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;cursor:pointer;font-size:.9rem;transition:all .2s}
-.opt:hover,.opt.selected{border-color:var(--accent);background:rgba(6,182,212,.1)}
-.btn{background:var(--accent);color:#000;border:none;padding:.85rem 2rem;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;width:100%}
-.btn:hover{background:var(--accent2);color:#fff}
+.opt{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.45rem .85rem;cursor:pointer;font-size:.9rem}
+.opt.selected{border-color:var(--accent)}
+.btn{background:var(--accent);color:#fff;border:none;padding:.85rem 2rem;border-radius:6px;font-size:1rem;font-weight:600;cursor:pointer;width:100%}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-#result{display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-top:1.5rem;white-space:pre-wrap;font-size:.95rem;line-height:1.7}
-#result h3{color:var(--accent);margin:1.5rem 0 .5rem;font-size:1rem}
+#result{display:none;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem;margin-top:1.25rem;white-space:pre-wrap;font-size:.95rem;line-height:1.7}
+#result h3{color:var(--accent);margin:1.2rem 0 .5rem;font-size:1rem}
 #result h3:first-child{margin-top:0}
-.result-actions{display:flex;gap:.5rem;margin-bottom:1.25rem}
-.result-actions button{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.85rem;transition:all .2s}
-.result-actions button:hover{border-color:var(--accent);color:var(--accent)}
-.result-actions button.copied{border-color:var(--green);color:var(--green)}
-.loading{text-align:center;padding:2rem;color:var(--dim)}
-.loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top:3px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:.5rem}
+.result-actions{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.result-actions button{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.45rem .85rem;border-radius:6px;cursor:pointer;font-size:.85rem}
+.result-actions button.copied{border-color:var(--accent);color:var(--accent)}
+.loading{text-align:center;padding:1.5rem;color:var(--muted)}
+.loading .spinner{display:inline-block;width:22px;height:22px;border:3px solid var(--border);border-top:3px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:.5rem}
 @keyframes spin{to{transform:rotate(360deg)}}
-.tag{display:inline-block;background:rgba(6,182,212,.1);border:1px solid var(--accent2);border-radius:4px;padding:2px 8px;font-size:.8rem;color:var(--accent);margin:2px}
-footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;color:var(--dim);font-size:.85rem}
 .examples{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-.examples-label{font-size:.8rem;color:var(--dim)}
-.example-btn{background:transparent;border:1px solid var(--border);color:var(--dim);padding:.35rem .75rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.examples-label{font-size:.8rem;color:var(--muted)}
+.example-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:.35rem .75rem;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:var(--body-font)}
 .example-btn:hover{border-color:var(--accent);color:var(--accent)}
-#result .md-content h2{color:var(--accent);font-size:1.05rem;margin:1.5rem 0 .5rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
+#result .md-content h2{color:var(--accent);font-size:1.05rem;margin:1.25rem 0 .5rem;padding-bottom:.25rem;border-bottom:1px solid var(--border)}
 #result .md-content h2:first-child{margin-top:0}
 #result .md-content h3{color:var(--accent);font-size:.95rem;margin:1rem 0 .4rem}
 #result .md-content ul{margin:.5rem 0;padding-left:1.25rem}
 #result .md-content li{margin:.25rem 0}
 #result .md-content strong{color:var(--text)}
-#result .md-content code{background:rgba(6,182,212,.1);padding:1px 5px;border-radius:3px;font-size:.9em}
+#result .md-content code{background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:.9em}
 #result .md-content p{margin:.5rem 0}
 .md-table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.88rem}
 .md-table th,.md-table td{border:1px solid var(--border);padding:.5rem .75rem;text-align:left}
-.md-table th{background:var(--surface2);color:var(--accent);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.02em}
-.md-table td{background:transparent}
-.md-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.md-table th{background:var(--surface-2);color:var(--accent);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.02em}
 .md-table code{font-size:.85em}
-blockquote{border-left:3px solid var(--accent2);padding:.5rem 1rem;margin:.5rem 0;color:var(--dim);background:rgba(6,182,212,.03);border-radius:0 6px 6px 0}
-.chat-msg .md-table{font-size:.85rem}
-.chat-msg .md-table th,.chat-msg .md-table td{padding:.35rem .5rem}
-.stream-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
-@keyframes blink{50%{opacity:0}}
-/* Follow-up chat */
-.followup-box{margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
-.followup-box h3{font-size:.95rem;margin-bottom:.75rem;color:var(--dim)}
-.followup-input{display:flex;gap:.5rem}
-.followup-input input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:var(--font);font-size:.9rem;outline:none;transition:border .2s}
-.followup-input input:focus{border-color:var(--accent)}
-.followup-input input::placeholder{color:var(--dim)}
-.followup-input button{background:var(--accent);color:#000;border:none;padding:.75rem 1.25rem;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
-.followup-input button:hover{background:var(--accent2);color:#fff}
+blockquote{border-left:3px solid var(--accent);padding:.5rem 1rem;margin:.5rem 0;color:var(--muted);background:var(--surface-2)}
+.stream-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);vertical-align:text-bottom;margin-left:2px}
+.followup-box{margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem}
+.followup-box h3{font-size:.95rem;margin-bottom:.75rem;color:var(--muted)}
+.followup-input{display:flex;gap:.5rem;flex-wrap:wrap}
+.followup-input input{flex:1;min-width:220px;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.65rem .85rem;color:var(--text);font-family:var(--body-font);font-size:.9rem;outline:none}
+.followup-input input::placeholder{color:var(--muted)}
+.followup-input button{background:var(--accent);color:#fff;border:none;padding:.6rem 1rem;border-radius:6px;font-size:.9rem;font-weight:600;cursor:pointer;white-space:nowrap}
 .followup-input button:disabled{opacity:.5;cursor:not-allowed}
 .followup-suggestions{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
-.followup-suggestions button{background:transparent;border:1px solid var(--border);color:var(--dim);padding:.3rem .7rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.followup-suggestions button{background:transparent;border:1px solid var(--border);color:var(--muted);padding:.3rem .7rem;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:var(--body-font)}
 .followup-suggestions button:hover{border-color:var(--accent);color:var(--accent)}
 .chat-history{margin-top:1rem}
-.chat-msg{padding:1rem;border-radius:8px;margin-bottom:.75rem;font-size:.9rem;line-height:1.6}
-.chat-msg.user{background:rgba(6,182,212,.08);border:1px solid var(--accent2)}
-.chat-msg.assistant{background:var(--surface2);border:1px solid var(--border)}
-.chat-msg .msg-label{font-size:.75rem;color:var(--dim);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+.chat-msg{padding:1rem;border-radius:6px;margin-bottom:.75rem;font-size:.9rem;line-height:1.6;border:1px solid var(--border);background:var(--surface-2)}
+.chat-msg.user{background:var(--surface)}
+.chat-msg .msg-label{font-size:.7rem;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:left;color:var(--muted);font-size:.85rem}
 @media(max-width:600px){.hero h1{font-size:1.4rem}.step{padding:1.25rem}.examples{flex-direction:column;align-items:flex-start}.followup-input{flex-direction:column}.followup-input button{width:100%}}
 @media print{body{background:#fff;color:#000}nav,.step,.btn,.loading,.followup-box,.result-actions,footer,.examples{display:none!important}#result{display:block!important;background:none;border:none;padding:0;color:#000;font-size:11pt;line-height:1.5}#result .md-content h2{color:#333;border-bottom:1px solid #ccc}#result .md-content h3{color:#555}#result .md-content code{background:#eee;color:#333}.md-table th,.md-table td{border:1px solid #999}.md-table th{background:#f0f0f0;color:#333}.chat-msg{border:1px solid #ccc;page-break-inside:avoid}.chat-msg.user{background:#f5f5f5}.chat-msg.assistant{background:#fff}blockquote{border-left:3px solid #999;color:#555;background:#fafafa}}
 </style>
 </head>
 <body>
-<nav><div class="container"><div class="brand">Schema<span>Forge</span></div><div style="display:flex;gap:1rem;align-items:center"><a href="/history" style="color:var(--dim);font-size:.9rem">📋 History</a><a href="/" class="back">← Home</a></div></div></nav>
+<nav>
+  <div class="container">
+    <div class="brand">📄 ProtoCol</div>
+    <div style="display:flex;gap:1rem;align-items:center">
+      <a href="/history" style="color:var(--muted);font-size:.9rem;text-decoration:none">History</a>
+      <a href="/" class="back">← Home</a>
+    </div>
+  </div>
+</nav>
 
 <div class="container">
-<div class="hero">
-<h1>Study Design Consultation</h1>
-<p>Paste your research aim. Get a defensible design with power calculations, causal structure, and preemptive reviewer rebuttals.</p>
-</div>
+  <div class="hero">
+    <h1>Study Design Consultation</h1>
+    <p>Complete the structured form below. ProtoCol will generate a defensible design, causal structure, and reviewer-ready rationale.</p>
+  </div>
 
-<div class="main">
+  <div class="main">
+    <div class="step">
+      <h2><span class="num">1.</span> Research aim</h2>
+      <label class="label" for="aim">Primary question</label>
+      <textarea id="aim" placeholder="e.g., We want to determine whether early initiation of SGLT2 inhibitors (within 30 days of T2DM diagnosis) reduces the 5-year risk of major adverse cardiovascular events compared to delayed initiation (>6 months)."></textarea>
+      <div class="examples">
+        <span class="examples-label">Example prompts:</span>
+        <button class="example-btn" onclick="loadExample(0)">RCT — Drug efficacy</button>
+        <button class="example-btn" onclick="loadExample(1)">Cohort — Surgical outcomes</button>
+        <button class="example-btn" onclick="loadExample(2)">Claims — Treatment timing</button>
+      </div>
+    </div>
 
-<div class="step">
-<h2><span class="num">1</span> Your Research Aim</h2>
-<textarea id="aim" placeholder="e.g., We want to determine whether early initiation of SGLT2 inhibitors (within 30 days of T2DM diagnosis) reduces the 5-year risk of major adverse cardiovascular events compared to delayed initiation (>6 months)."></textarea>
-<div class="examples">
-<span class="examples-label">Try an example:</span>
-<button class="example-btn" onclick="loadExample(0)">RCT — Drug efficacy</button>
-<button class="example-btn" onclick="loadExample(1)">Cohort — Surgical outcomes</button>
-<button class="example-btn" onclick="loadExample(2)">Claims — Treatment timing</button>
-</div>
-</div>
+    <div class="step">
+      <h2><span class="num">2.</span> Study context <span style="color:var(--muted);font-weight:400;font-size:.85rem">(optional)</span></h2>
+      <label class="label">Available design or data source</label>
+      <div class="options" id="dataOptions">
+        <div class="opt" data-val="rct">Randomized Trial</div>
+        <div class="opt" data-val="cohort">Cohort Study</div>
+        <div class="opt" data-val="case-control">Case-Control</div>
+        <div class="opt" data-val="claims">Claims/EHR Data</div>
+        <div class="opt" data-val="registry">Registry</div>
+        <div class="opt" data-val="unsure">Not Sure</div>
+      </div>
+      <label class="label" for="context" style="margin-top:.75rem">Constraints, population, or data details</label>
+      <textarea id="context" style="min-height:80px" placeholder="Any additional context — available data, sample size estimate, population, constraints..."></textarea>
+    </div>
 
-<div class="step">
-<h2><span class="num">2</span> Study Context <span style="color:var(--dim);font-weight:400;font-size:.85rem">(optional)</span></h2>
-<div class="options" id="dataOptions">
-<div class="opt" data-val="rct">Randomized Trial</div>
-<div class="opt" data-val="cohort">Cohort Study</div>
-<div class="opt" data-val="case-control">Case-Control</div>
-<div class="opt" data-val="claims">Claims/EHR Data</div>
-<div class="opt" data-val="registry">Registry</div>
-<div class="opt" data-val="unsure">Not Sure</div>
-</div>
-<textarea id="context" style="min-height:80px;margin-top:.75rem" placeholder="Any additional context — available data, sample size estimate, population, constraints..."></textarea>
-</div>
+    <button class="btn" id="generateBtn" onclick="runConsult()">Generate Study Design →</button>
 
-<button class="btn" id="generateBtn" onclick="runConsult()">Generate Study Design →</button>
+    <div id="loading" class="loading" style="display:none">
+      <div class="spinner"></div>
+      <p>Analyzing your aim and building a methodologically defensible design...</p>
+      <p style="font-size:.85rem;margin-top:.5rem">This takes 15-30 seconds</p>
+    </div>
 
-<div id="loading" class="loading" style="display:none">
-<div class="spinner"></div>
-<p>Analyzing your aim and building a methodologically defensible design...</p>
-<p style="font-size:.85rem;margin-top:.5rem">This takes 15-30 seconds</p>
-</div>
-
-<div id="result"></div>
-</div>
+    <div id="result"></div>
+  </div>
 </div>
 
 <footer>
-<div class="container">SchemaForge by <a href="https://coef.health">Coefficients</a> · Study design is not a checkbox — it's the foundation.</div>
+  <div class="container">Published by <a href="https://coef.health">Coefficients Health Analytics</a>. Study design is not a checkbox — it's the foundation.</div>
 </footer>
 
 <script>
@@ -245,14 +267,14 @@ function restoreSession() {
       const div = document.createElement('div');
       div.className = 'chat-msg ' + (m.role === 'user' ? 'user' : 'assistant');
       const safeContent = renderSafeMarkdown(m.content);
-      div.innerHTML = `<div class="msg-label">${m.role === 'user' ? 'You' : 'SchemaForge'}</div>` +
+      div.innerHTML = `<div class="msg-label">${m.role === 'user' ? 'You' : 'ProtoCol'}</div>` +
         `<div class="md-content">${safeContent}</div>`;
       history.appendChild(div);
     }
     
     // Show restore notice
     const notice = document.createElement('div');
-    notice.style.cssText = 'text-align:center;padding:.5rem;font-size:.8rem;color:var(--dim);margin-bottom:.5rem';
+    notice.style.cssText = 'text-align:center;padding:.5rem;font-size:.8rem;color:var(--muted);margin-bottom:.5rem';
     notice.innerHTML = '↻ Previous session restored · <a href="#" onclick="clearSession();return false" style="color:var(--accent)">Start fresh</a>';
     result.parentElement.insertBefore(notice, result);
   } catch(e) { console.error('restore failed', e); }
@@ -265,7 +287,7 @@ function clearSession() {
 
 function exportConsult() {
   if (!window._chatMessages || window._chatMessages.length < 3) return;
-  let md = '# SchemaForge Study Design Consultation\n';
+  let md = '# ProtoCol Study Design Consultation\n';
   md += `_Generated ${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}_\n\n`;
   
   const aim = document.getElementById('aim').value;
@@ -278,13 +300,13 @@ function exportConsult() {
     if (m.role === 'assistant') md += m.content + '\n\n';
   }
   
-  md += '---\n_Consultation by [SchemaForge](https://schemaforge-seven.vercel.app) · Coefficients_\n';
+  md += '---\n_Consultation by [ProtoCol](https://schemaforge-seven.vercel.app) · Coefficients_\n';
   
   const blob = new Blob([md], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `schemaforge-consultation-${Date.now()}.md`;
+  a.download = `protocol-consultation-${Date.now()}.md`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -420,7 +442,7 @@ async function runConsult() {
   result.style.display = 'none';
   window._lastConsultRaw = '';
 
-  const systemPrompt = `You are SchemaForge, an expert study design consultant. You think like a causal inference methodologist trained at Harvard CAUSALab and Mount Sinai — design precedes statistics, assumptions precede models, estimands precede estimators.
+  const systemPrompt = `You are ProtoCol, an expert study design consultant. You think like a causal inference methodologist trained at Harvard CAUSALab and Mount Sinai — design precedes statistics, assumptions precede models, estimands precede estimators.
 
 For an INITIAL consultation (first message), produce a structured design with these sections:
 
@@ -567,7 +589,7 @@ function showFollowupBox() {
   box.id = 'followup';
   box.className = 'followup-box';
   box.innerHTML = `
-    <h3>💬 Ask a follow-up question</h3>
+    <h3>Follow-up question</h3>
     <div class="followup-suggestions">
       <button onclick="askFollowup(this.textContent)">What if my sample is smaller?</button>
       <button onclick="askFollowup(this.textContent)">How do I handle unmeasured confounding?</button>
@@ -607,7 +629,7 @@ async function askFollowup(text) {
   // Show streaming response
   const assistantDiv = document.createElement('div');
   assistantDiv.className = 'chat-msg assistant';
-  assistantDiv.innerHTML = `<div class="msg-label">SchemaForge</div><div class="md-content"><span class="stream-cursor"></span></div>`;
+  assistantDiv.innerHTML = `<div class="msg-label">ProtoCol</div><div class="md-content"><span class="stream-cursor"></span></div>`;
   history.appendChild(assistantDiv);
   const contentEl = assistantDiv.querySelector('.md-content');
   
@@ -671,13 +693,13 @@ async function askFollowup(text) {
         const cta = document.createElement('div');
         cta.id = 'emailCta';
         cta.innerHTML = `
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:1.5rem 0;text-align:center">
-            <p style="margin-bottom:.75rem;font-size:.95rem">📬 Want methodology tips & early access to new features?</p>
-            <div style="display:flex;gap:.5rem;max-width:360px;margin:0 auto">
-              <input type="email" id="ctaEmail" placeholder="your@email.com" style="flex:1;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem">
-              <button onclick="captureCtaEmail()" style="padding:.6rem 1rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">Subscribe</button>
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin:1.5rem 0;text-align:center">
+            <p style="margin-bottom:.75rem;font-size:.95rem">Want methodology tips & early access to new features?</p>
+            <div style="display:flex;gap:.5rem;max-width:360px;margin:0 auto;flex-wrap:wrap">
+              <input type="email" id="ctaEmail" placeholder="your@email.com" style="flex:1;min-width:200px;padding:.6rem .8rem;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.9rem">
+              <button onclick="captureCtaEmail()" style="padding:.6rem 1rem;border-radius:6px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:.9rem;font-weight:600;white-space:nowrap">Subscribe</button>
             </div>
-            <p style="font-size:.75rem;color:var(--dim);margin-top:.5rem">No spam. Unsubscribe anytime.</p>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:.5rem">No spam. Unsubscribe anytime.</p>
           </div>`;
         const historyEl = document.getElementById('chatHistory');
         if (historyEl) historyEl.appendChild(cta);
@@ -691,6 +713,23 @@ async function askFollowup(text) {
     btn.disabled = false;
     input.focus();
   }
+}
+
+async function captureCtaEmail() {
+  const input = document.getElementById('ctaEmail');
+  if (!input) return;
+  const email = input.value.trim();
+  if (!email) return;
+
+  try {
+    await fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'consult-followup' })
+    });
+    localStorage.setItem('sf_email_captured', '1');
+    input.value = '';
+  } catch (e) { /* Don't block UX */ }
 }
 </script>
 </body>

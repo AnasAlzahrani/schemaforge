@@ -15,7 +15,7 @@
 
 Hi [First Name],
 
-Your next study fails if the design is weak. **SchemaForge** fixes that in 20 minutes — power calculations, causal DAGs, and reviewer rebuttals through an AI consultation, not templates.
+Your next study fails if the design is weak. **ProtoCol** fixes that in 20 minutes — power calculations, causal DAGs, and reviewer rebuttals through an AI consultation, not templates.
 
 Try it free: **https://schemaforge-seven.vercel.app/consult**
 

@@ -1,7 +1,7 @@
 # Reddit Post — r/webdev (Weekly Showcase Thread)
 
 ## Title
-SchemaForge — a zero-dependency schema markup generator (pure HTML/CSS/JS, no build step)
+ProtoCol — a zero-dependency schema markup generator (pure HTML/CSS/JS, no build step)
 
 ## Body
 
