@@ -1,0 +1,26 @@
+# Never upload local secrets or repo/operator state to Vercel
+.env
+.env.*
+.secrets.env
+*.pem
+*.key
+.git
+.git/**
+.vercel
+.vercel/**
+.openclaw
+.openclaw/**
+memory
+memory/**
+MEMORY.md
+USER.md
+AGENTS.md
+SOUL.md
+TOOLS.md
+*.sqlite
+*.db
+node_modules
+node_modules/**
+__pycache__
+__pycache__/**
+*.pyc
